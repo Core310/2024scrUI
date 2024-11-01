@@ -22,12 +22,12 @@ $(document).ready(function () {
             $("#connecting-state").text("Updating Data");
             $(".connecting-input").hide();
 
-            send({ op: "broadcast" });
-            send({ op: "get_nodes" });
-            send({ op: "get_presets" });
+            send({op: "broadcast"});
+            send({op: "get_nodes"});
+            send({op: "get_presets"});
 
             const waitInterval = setInterval(() => {
-                if (deviceStates["autonav_serial_can"] != 3) {
+                if (deviceStates["autonav_serial_can"] !== 3) {
                     return;
                 }
 
@@ -51,9 +51,8 @@ $(document).ready(function () {
             }, 1000);
 
             setTimeout(() => {
-                if(websocket.readyState == 1)
-                {
-                    send({ op: "get_presets" });
+                if (websocket.readyState === 1) {
+                    send({op: "get_presets"});
                 }
             }, 3000);
         };
@@ -62,13 +61,13 @@ $(document).ready(function () {
             const messages = event.data.split("\n");
             for (const message of messages) {
                 const obj = JSON.parse(message);
-                const { op, topic } = obj;
+                const {op, topic} = obj;
 
-                if (op == "data") {
+                if (op === "data") {
                     onTopicData(topic, obj);
                 }
 
-                if (op == "get_presets_callback") {
+                if (op === "get_presets_callback") {
                     const presets = obj.presets;
                     const presetElement = $("#dropdown_elements");
                     presetElement.empty();
@@ -82,7 +81,7 @@ $(document).ready(function () {
                                 op: "set_active_preset",
                                 preset: preset_name
                             });
-                            send({ op: "get_presets" });
+                            send({op: "get_presets"});
                         });
                     }
 
@@ -90,7 +89,7 @@ $(document).ready(function () {
                     $("#active_preset_value").text(current_preset);
                 }
 
-                if (op == "get_nodes_callback") {
+                if (op === "get_nodes_callback") {
                     console.log(obj);
                     for (let i = 0; i < obj.nodes.length; i++) {
                         const node = obj.nodes[i];
@@ -103,7 +102,7 @@ $(document).ready(function () {
 
                         const statemap = obj.states;
                         if (node in statemap) {
-                            if (node == "rosbridge_websocket" || node == "rosapi" || node == "scr_core" || node == "rosapi_params") {
+                            if (node === "rosbridge_websocket" || node === "rosapi" || node === "scr_core" || node === "rosapi_params") {
                                 continue;
                             }
 
@@ -124,8 +123,8 @@ $(document).ready(function () {
 
                     // Update system state
                     let system = obj["system"];
-                    $("#var_system_state").text(system["state"] == 0 ? "Diabled" : system["state"] == 1 ? "Autonomous" : system["state"] == 2 ? "Manual" : "Shutdown");
-                    $("#var_system_mode").text(system["mode"] == 0 ? "Competition" : system["mode"] == 1 ? "Simulation" : "Practice");
+                    $("#var_system_state").text(system["state"] === 0 ? "Diabled" : system["state"] === 1 ? "Autonomous" : system["state"] === 2 ? "Manual" : "Shutdown");
+                    $("#var_system_mode").text(system["mode"] === 0 ? "Competition" : system["mode"] === 1 ? "Simulation" : "Practice");
                     $("#var_system_mobility").text(system["mobility"] ? "Enabled" : "Disabled");
 
                     // Update some buttons
@@ -174,7 +173,7 @@ $(document).ready(function () {
     }
 
     function generateElementForConbus(data, type, text, deviceId, address, readonly = false) {
-        if (type == "bool") {
+        if (type === "bool") {
             const checked = fromBytesToBool(data);
 
             // Create a dropdown
@@ -189,7 +188,7 @@ $(document).ready(function () {
                 const instruction = createConbusWriteInstruction(
                     parseInt(deviceId),
                     parseInt(address),
-                    Array.from(fromBoolToBytes(select.value == 1))
+                    Array.from(fromBoolToBytes(select.value === 1))
                 )
                 send({
                     op: "conbus",
@@ -218,8 +217,7 @@ $(document).ready(function () {
             div.appendChild(span);
             div.appendChild(select);
             return div;
-        }
-        else if (type == "float") {
+        } else if (type === "float") {
             const div = document.createElement("div");
             div.classList.add("input-group");
             div.classList.add("mb-3");
@@ -249,8 +247,7 @@ $(document).ready(function () {
             div.appendChild(span);
             div.appendChild(input);
             return div;
-        }
-        else if (type == "int") {
+        } else if (type === "int") {
             const div = document.createElement("div");
             div.classList.add("input-group");
             div.classList.add("mb-3");
@@ -280,7 +277,7 @@ $(document).ready(function () {
             div.appendChild(span);
             div.appendChild(input);
             return div;
-        } else if (type == "uint") {
+        } else if (type === "uint") {
             const div = document.createElement("div");
             div.classList.add("input-group");
             div.classList.add("mb-3");
@@ -315,24 +312,24 @@ $(document).ready(function () {
     }
 
     setInterval(() => {
-        if (sendQueue.length > 0 && websocket.readyState == 1 && websocket.bufferedAmount == 0) {
+        if (sendQueue.length > 0 && websocket.readyState === 1 && websocket.bufferedAmount === 0) {
             const obj = sendQueue.shift();
             websocket.send(JSON.stringify(obj));
         }
     }, 10);
 
     function onTopicData(topic, msg) {
-        const { iterator } = msg;
-        if (iterator != undefined && iterators.includes(iterator)) {
+        const {iterator} = msg;
+        if (iterator !== undefined && iterators.includes(iterator)) {
             iterators.splice(iterators.indexOf(iterator), 1);
             return;
         }
 
-        if (topic == "/scr/state/system") {
-            const { state, mode, mobility } = msg;
+        if (topic === "/scr/state/system") {
+            const {state, mode, mobility} = msg;
 
-            $("#var_system_state").text(state == 0 ? "Diabled" : state == 1 ? "Autonomous" : state == 2 ? "Manual" : "Shutdown");
-            $("#var_system_mode").text(mode == 0 ? "Competition" : mode == 1 ? "Simulation" : "Practice");
+            $("#var_system_state").text(state === 0 ? "Diabled" : state === 1 ? "Autonomous" : state === 2 ? "Manual" : "Shutdown");
+            $("#var_system_mode").text(mode === 0 ? "Competition" : mode === 1 ? "Simulation" : "Practice");
             $("#var_system_mobility").text(mobility ? "Enabled" : "Disabled");
 
             systemState.state = state;
@@ -345,8 +342,8 @@ $(document).ready(function () {
             return;
         }
 
-        if (topic == "/scr/state/device") {
-            const { device, state } = msg;
+        if (topic === "/scr/state/device") {
+            const {device, state} = msg;
 
             deviceStates[device] = state;
             unorderedListElement = $("#element_device_states");
@@ -358,15 +355,15 @@ $(document).ready(function () {
             return;
         }
 
-        if (topic == "/scr/configuration") {
-            const { device, json } = msg;
+        if (topic === "/scr/configuration") {
+            const {device, json} = msg;
             config[device] = JSON.parse(json);
             regenerateConfig();
             return;
         }
 
-        if (topic == "/scr/logging") {
-            logs.push({ message: msg.data, node: msg.node, timestamp: new Date() });
+        if (topic === "/scr/logging") {
+            logs.push({message: msg.data, node: msg.node, timestamp: new Date()});
             if (logs.length > 30) {
                 logs.shift();
             }
@@ -385,8 +382,8 @@ $(document).ready(function () {
             return;
         }
 
-        if (topic == "/autonav/gps") {
-            const { latitude, longitude, gps_fix, is_locked, satellites } = msg;
+        if (topic === "/autonav/gps") {
+            const {latitude, longitude, gps_fix, is_locked, satellites} = msg;
             $("#var_gps_position").text(formatLatLong(latitude, longitude, true));
             $("#var_gps_fix").text(gps_fix);
             $("#var_gps_fixed").text(is_locked ? "Locked" : "Not Locked");
@@ -394,26 +391,33 @@ $(document).ready(function () {
             return;
         }
 
-        if (topic == "/autonav/MotorFeedback") {
-            const { delta_x, delta_y, delta_theta } = msg;
+        if (topic === "/autonav/MotorFeedback") {
+            const {delta_x, delta_y, delta_theta} = msg;
             $("#var_motors_feedback").text(`(${formatToFixed(delta_x, 4)}, ${formatToFixed(delta_y, 4)}, ${formatToFixed(delta_theta, 4)}°)`);
             return;
         }
 
-        if (topic == "/autonav/MotorInput") {
-            const { forward_velocity, angular_velocity } = msg;
+        if (topic === "/autonav/MotorInput") {
+            const {forward_velocity, angular_velocity} = msg;
             $("#var_motors_velocity").text(`(${formatToFixed(forward_velocity, 3)}, ${formatToFixed(angular_velocity, 3)})`);
             return;
         }
 
-        if (topic == "/autonav/debug/astar") {
-            const { desired_heading, desired_latitude, desired_longitude, distance_to_destination, waypoints, time_until_use_waypoints } = msg;
+        if (topic === "/autonav/debug/astar") {
+            const {
+                desired_heading,
+                desired_latitude,
+                desired_longitude,
+                distance_to_destination,
+                waypoints,
+                time_until_use_waypoints
+            } = msg;
             $("#var_astar_heading").text(`${radiansToDegrees(parseFloat(desired_heading)).toFixed(3)}°`);
             $("#var_astar_waypoint").text(formatLatLong(desired_latitude, desired_longitude, true));
             $("#var_astar_distance").text(formatToFixed(distance_to_destination, 3));
             $("#var_astar_waypoints").text(
                 waypoints.reduce((acc, val, i) => {
-                    if (i % 2 == 0) {
+                    if (i % 2 === 0) {
                         acc.push([val, waypoints[i + 1]]);
                     }
 
@@ -426,52 +430,52 @@ $(document).ready(function () {
             return;
         }
 
-        if (topic == "/autonav/position") {
-            const { x, y, theta, latitude, longitude } = msg;
+        if (topic === "/autonav/position") {
+            const {x, y, theta, latitude, longitude} = msg;
             $("#var_position_origin").text(`(${formatToFixed(x, 4)}, ${formatToFixed(y, 4)}, ${radiansToDegrees(parseFloat(theta)).toFixed(3)}°)`);
             $("#var_position_global").text(`(${formatToFixed(latitude, 8)}, ${formatToFixed(longitude, 8)})`);
             return;
         }
 
-        if (topic == "/autonav/camera/compressed/left") {
+        if (topic === "/autonav/camera/compressed/left") {
             transferImageToElement("target_raw_camera_left", msg.data);
             return;
         }
 
-        if (topic == "/autonav/camera/compressed/right") {
+        if (topic === "/autonav/camera/compressed/right") {
             transferImageToElement("target_raw_camera_right", msg.data);
             return;
         }
 
-        if (topic == "/autonav/cfg_space/raw/image/left_small") {
+        if (topic === "/autonav/cfg_space/raw/image/left_small") {
             transferImageToElement("target_filtered_left", msg.data);
             return;
         }
 
-        if (topic == "/autonav/cfg_space/raw/image/right_small") {
+        if (topic === "/autonav/cfg_space/raw/image/right_small") {
             transferImageToElement("target_filtered_right", msg.data);
             return;
         }
 
-        if (topic == "/autonav/cfg_space/combined/image") {
+        if (topic === "/autonav/cfg_space/combined/image") {
             transferImageToElement("target_combined", msg.data);
             return;
         }
 
-        if (topic == "/autonav/debug/astar/image") {
+        if (topic === "/autonav/debug/astar/image") {
             transferImageToElement("target_astar", msg.data);
             return;
         }
 
-        if (topic == "/autonav/imu") {
-            const { accel_x, accel_y, accel_z, angular_x, angular_y, angular_z, yaw, pitch, roll } = msg;
+        if (topic === "/autonav/imu") {
+            const {accel_x, accel_y, accel_z, angular_x, angular_y, angular_z, yaw, pitch, roll} = msg;
             $("#var_imu_acceleration").text(`(${formatToFixed(accel_x, 4)}, ${formatToFixed(accel_y, 4)}, ${formatToFixed(accel_z, 4)})`);
             $("#var_imu_angular").text(`(${formatToFixed(angular_x, 4)}, ${formatToFixed(angular_y, 4)}, ${formatToFixed(angular_z, 4)})`);
             $("#var_imu_orientation").text(`(${radiansToDegrees(parseFloat(yaw)).toFixed(3)}°, ${radiansToDegrees(parseFloat(pitch)).toFixed(3)}°, ${radiansToDegrees(parseFloat(roll)).toFixed(3)}°)`);
         }
 
-        if (topic == "/autonav/conbus") {
-            const { id, data } = msg;
+        if (topic === "/autonav/conbus") {
+            const {id, data} = msg;
             let response;
             if (id >= 1100 && id < 1200) {
                 response = createConbusReadResponse(id, data);
@@ -494,7 +498,7 @@ $(document).ready(function () {
 
             const conbusElement = $(`#conbus`);
             const conbusCard = $(`#conbus_${response.id}`);
-            if (conbusCard != undefined || conbusCard.length != 0) {
+            if (conbusCard !== undefined || conbusCard.length !== 0) {
                 conbusCard.remove();
             }
 
@@ -527,7 +531,7 @@ $(document).ready(function () {
             }
 
             conbusElement.append(card);
-            return;
+
         }
     }
 
@@ -536,20 +540,20 @@ $(document).ready(function () {
     $(".dropdown-menu a").on("click", function () {
         const parentDataTarget = $(this).parents(".dropdown").attr("data-target");
         console.log(parentDataTarget);
-        if (parentDataTarget == "system_state") {
+        if (parentDataTarget === "system_state") {
             const id = $(this).attr("data-value");
             systemState.state = parseInt(id);
             setSystemState();
-        } else if (parentDataTarget == "system_mode") {
+        } else if (parentDataTarget === "system_mode") {
             const id = $(this).attr("data-value");
             systemState.mode = parseInt(id);
             setSystemState();
-        } else if (parentDataTarget == "theme") {
+        } else if (parentDataTarget === "theme") {
             const id = $(this).attr("data-value");
             preferences.theme = id;
             savePreferences();
             $("html").attr("data-bs-theme", id);
-        } else if (parentDataTarget == "gpsformat") {
+        } else if (parentDataTarget === "gpsformat") {
             preferences.gpsFormat = $(this).attr("data-value");
             savePreferences();
         }
@@ -559,7 +563,7 @@ $(document).ready(function () {
         send({
             op: "save_preset_mode"
         });
-        send({ op: "get_presets" });
+        send({op: "get_presets"});
     });
 
     $("#save_preset_as").on("click", function () {
@@ -568,7 +572,7 @@ $(document).ready(function () {
             op: "save_preset_as",
             preset: preset_name
         });
-        send({ op: "get_presets" });
+        send({op: "get_presets"});
         $("#preset_save_name").val("");
     });
 
@@ -577,7 +581,7 @@ $(document).ready(function () {
             op: "delete_preset",
             preset: current_preset
         });
-        send({ op: "get_presets" });
+        send({op: "get_presets"});
     });
 
     $("#checkbox_system_mobility").on("change", function () {
@@ -607,9 +611,10 @@ $(document).ready(function () {
         $("#log_body").empty();
     });
 
+
     function generateElementForConfiguration(data, type, device, text) {
-        if (type == "bool") {
-            const checked = data == 1;
+        if (type === "bool") {
+            const checked = data === 1;
 
             // Create a dropdown
             const div = document.createElement("div");
@@ -619,7 +624,7 @@ $(document).ready(function () {
             const select = document.createElement("select");
             select.classList.add("form-select");
             select.onchange = function () {
-                config[device][text] = select.value == 1 ? true : false;
+                config[device][text] = select.value === 1 ? true : false;
                 send({
                     op: "configuration",
                     device: device,
@@ -647,8 +652,7 @@ $(document).ready(function () {
             div.appendChild(span);
             div.appendChild(select);
             return div;
-        }
-        else if (type == "float") {
+        } else if (type === "float") {
             const div = document.createElement("div");
             div.classList.add("input-group");
             div.classList.add("mb-3");
@@ -673,8 +677,7 @@ $(document).ready(function () {
             div.appendChild(span);
             div.appendChild(input);
             return div;
-        }
-        else if (type == "int") {
+        } else if (type === "int") {
             const div = document.createElement("div");
             div.classList.add("input-group");
             div.classList.add("mb-3");
@@ -699,8 +702,7 @@ $(document).ready(function () {
             div.appendChild(span);
             div.appendChild(input);
             return div;
-        }
-        else if (type == "point.int") {
+        } else if (type === "point.int") {
             // x, y point for two integers
             const div = document.createElement("div");
             div.classList.add("input-group");
@@ -740,8 +742,7 @@ $(document).ready(function () {
             div.appendChild(inputX);
             div.appendChild(inputY);
             return div;
-        }
-        else if (type == "parallelogram.int") {
+        } else if (type === "parallelogram.int") {
             const div = document.createElement("div");
             div.classList.add("input-group", "mb-3");
 
@@ -840,8 +841,7 @@ $(document).ready(function () {
             div.appendChild(inputX4);
             div.appendChild(inputY4);
             return div;
-        }
-        else {
+        } else {
             const options = addressKeys[device][text];
 
             if (typeof options == "object") {
@@ -866,7 +866,7 @@ $(document).ready(function () {
                 for (let i = 0; i < Object.keys(options).length; i++) {
                     const option = document.createElement("option");
                     option.value = i;
-                    option.selected = i == index;
+                    option.selected = i === index;
                     option.innerText = options[i];
                     select.appendChild(option);
                 }
@@ -882,13 +882,13 @@ $(document).ready(function () {
         }
     }
 
+    //TODO 29/10/2024  Config page needs to be implemented
     const regenerateConfig = () => {
         const configElement = $("#options");
         configElement.empty();
 
         // Sort the keys in each config by their addressKeys
-        for(const deviceId in addressKeys)
-        {
+        for (const deviceId in addressKeys) {
             if (!(deviceId in config)) {
                 continue;
             }
@@ -898,10 +898,10 @@ $(document).ready(function () {
             deviceElement.append(`<div class="card-header"><h5>${title}</h5></div>`);
             const deviceBody = $(`<div class="card-body"></div>`);
             deviceElement.append(deviceBody);
-            
+
             const deviceConfig = config[deviceId];
             for (const address in addressKeys[deviceId]) {
-                if (address == "internal_title") {
+                if (address === "internal_title") {
                     continue;
                 }
 
