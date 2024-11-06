@@ -25,11 +25,8 @@ $(document).keydown(function (e) {
 const dataPageIds = [
     "dashboard",
     "vision",
-    "logging",
     "configuration",
-    "conbus",
-    "preferences",
-    "debug"
+    "preferences"
 ];
 let i = -1;
 

@@ -25,21 +25,17 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-page-id="vision">Vision</a>
-
-            <li class="nav-item">
-                <a class="nav-link" data-page-id="logging">Logging</a>
-            </li>
+                <!--//TODO 5/11/2024 low priority feature to eventually get to
+                <li class="nav-item">
+                    <a class="nav-link" data-page-id="logging">Logging</a>
+                </li>
+                -->
             <li class="nav-item">
                 <a class="nav-link" data-page-id="configuration">Configuration</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" data-page-id="conbus">Conbus</a>
-            </li>
+
             <li class="nav-item">
                 <a class="nav-link" data-page-id="preferences">Preferences</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-page-id="debug">Debug</a>
             </li>
 
         </ul>
@@ -106,6 +102,45 @@
                 <h5>Distance to Waypoint: <span id="var_astar_distance"></span></h5>
                 <h5>Waypoints: <span id="var_astar_waypoints"></span></h5>
             </div>
+
+            <div class="divider">
+                <h3>System</h3>
+            </div>
+
+            <div class="section gap flex-column">
+                <div class="dropdown" data-target="system_state">
+                    <button aria-expanded="false" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
+                            id="dropdown_system_state" type="button">
+                        System State
+                    </button>
+                    <ul aria-labelledby="dropdown_system_state" class="dropdown-menu">
+                        <li><a class="dropdown-item" data-value="0">Disabled</a></li>
+                        <li><a class="dropdown-item" data-value="1">Autonomous</a></li>
+                        <li><a class="dropdown-item" data-value="2">Manual</a></li>
+                        <li><a class="dropdown-item" data-value="3">Shutdown</a></li>
+                    </ul>
+                </div>
+
+                <div class="dropdown" data-target="system_mode">
+                    <button aria-expanded="false" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
+                            id="dropdown_system_mode" type="button">
+                        System Mode
+                    </button>
+                    <ul aria-labelledby="dropdown_system_mode" class="dropdown-menu">
+                        <li><a class="dropdown-item" data-value="0">Competition</a></li>
+                        <li><a class="dropdown-item" data-value="1">Simulation</a></li>
+                        <li><a class="dropdown-item" data-value="2">Practice</a></li>
+                    </ul>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" id="checkbox_system_mobility" type="checkbox" value="">
+                    <label class="form-check-label" for="checkbox_system_mobility">
+                        Mobility
+                    </label>
+                </div>
+            </div>
+
         </div>
         <div class="col" id="vtest">
             <div class="divider">
@@ -172,9 +207,6 @@
 
         </div>
     </div>
-    <!-- TODO: No need 2 touch -->
-    <div class="page" id="conbus">
-    </div>
 
     <div class="page" id="preferences">
         <div class="divider">
@@ -203,7 +235,7 @@
             </ul>
         </div>
     </div>
-    <!-- TODO: Add logging page -->
+    <!-- TODO: Add logging page, THIS PAGE IS NOT IN USE -->
     <div class="page" id="logging">
         <button class="btn btn-primary" id="clear_log" type="button">
             Clear
@@ -234,44 +266,6 @@
         </div>
     </div>
 
-    <div class="page" id="debug">
-        <div class="divider">
-            <h3>System</h3>
-        </div>
-        <div class="section gap flex-column">
-            <div class="dropdown" data-target="system_state">
-                <button aria-expanded="false" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
-                        id="dropdown_system_state" type="button">
-                    System State
-                </button>
-                <ul aria-labelledby="dropdown_system_state" class="dropdown-menu">
-                    <li><a class="dropdown-item" data-value="0">Disabled</a></li>
-                    <li><a class="dropdown-item" data-value="1">Autonomous</a></li>
-                    <li><a class="dropdown-item" data-value="2">Manual</a></li>
-                    <li><a class="dropdown-item" data-value="3">Shutdown</a></li>
-                </ul>
-            </div>
-
-            <div class="dropdown" data-target="system_mode">
-                <button aria-expanded="false" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
-                        id="dropdown_system_mode" type="button">
-                    System Mode
-                </button>
-                <ul aria-labelledby="dropdown_system_mode" class="dropdown-menu">
-                    <li><a class="dropdown-item" data-value="0">Competition</a></li>
-                    <li><a class="dropdown-item" data-value="1">Simulation</a></li>
-                    <li><a class="dropdown-item" data-value="2">Practice</a></li>
-                </ul>
-            </div>
-
-            <div class="form-check">
-                <input class="form-check-input" id="checkbox_system_mobility" type="checkbox" value="">
-                <label class="form-check-label" for="checkbox_system_mobility">
-                    Mobility
-                </label>
-            </div>
-        </div>
-    </div>
 </main>
 
 <footer>
@@ -293,6 +287,7 @@
                 <input aria-label="Port" class="form-control" id="input_port" placeholder="8023" type="text"
                        value="8023">
             </div>
+            f`
             <input aria-label="Address" class="form-control" id="input_host" placeholder="127.0.0.1" type="text"
                    value="127.0.0.1">
         </div>

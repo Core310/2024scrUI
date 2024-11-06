@@ -122,7 +122,7 @@ $(document).ready(function () {
                     regenerateConfig();
 
                     // Update system state
-                    let system = obj["system"];
+                    let system = obj["system"];//TODO 5/11/2024 make system state print to ensure that its being logged
                     $("#var_system_state").text(system["state"] === 0 ? "Diabled" : system["state"] === 1 ? "Autonomous" : system["state"] === 2 ? "Manual" : "Shutdown");
                     $("#var_system_mode").text(system["mode"] === 0 ? "Competition" : system["mode"] === 1 ? "Simulation" : "Practice");
                     $("#var_system_mobility").text(system["mobility"] ? "Enabled" : "Disabled");
