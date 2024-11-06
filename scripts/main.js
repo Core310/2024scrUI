@@ -13,10 +13,11 @@ $(document).ready(function () {
 
     ////////////////////////////////// Websocekt //////////////////////////////////
 
-    var websocket;
+    let websocket;
     const createWebsocket = () => {
         const userID = generateUUID();
-        websocket = new WebSocket(`ws://${preferences.host}:${preferences.port}/?id=${userID}`);
+        const url = `ws://${preferences.host}:${preferences.port}/?id=${userID}`
+        websocket = new WebSocket(url);
 
         websocket.onopen = function (event) {
             $("#connecting-state").text("Updating Data");
