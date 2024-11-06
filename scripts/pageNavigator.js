@@ -1,35 +1,45 @@
 $(document).keydown(function (e) {
+    let LETFTKEY = 37,
+        RIGHTKEY = 39;
 
     const activeLink = document.querySelector('a.nav-link.active');
 
     let newActiveLink;
     switch (e.which) {
-        case 37: // left
-            i === dataPageIds.length ? i = 0 : i++;//TODO 5/11/2024 Get the current navigation to take into account the current index of whatever tab ur currently on
-
+        case LETFTKEY:
+            i = currentPageIndex();
+            i === dataPageIds.length - 1 ? i = 0 : i++;//i===lastPage? 0 : ++
 
             const activeNav = $('.nav-link.active'); //grabs all elements with .nav-link.active classes
-            activeNav.removeClass('active');//Disable current tab
+            activeNav.removeClass('active');//Disable current tab from active tab list
             const oldPageId = activeNav.attr('data-page-id'); //Current page id
-            $('#' + oldPageId).hide(); //hide old page with IDD
-
-            const pageId = $(`.nav-link[data-page-id="${dataPageIds[i]}"]`); //new page ID to be shown where (this) is the clicked element
-            pageId.addClass('active');//make clicked element active
-
-            $('#' + pageId).show();
+            $('#' + oldPageId).hide(); //hide old page
 
 
-            //new code above
+            const pageId = $(`.nav-link[data-page-id="${dataPageIds[i]}"]`); //new page ID to navigated to
+            pageId.addClass('active');//make selected dataPage active fixme this line should be before the bind?
+            $('#' + $(`.nav-link.active`).attr('data-page-id')).show();//show the current page fixme!! not showing the page after hiding prev page
 
             break;
-        case 39: // right
-            newActiveLink = activeLink.parentElement.nextElementSibling?.querySelector('a.nav-link.active');
+        case RIGHTKEY:
+            //TODO 5/11/2024 once done with above put that here
             break;
         default:
             return;
     }
     e.preventDefault();
 });
+
+function currentPageIndex() {
+    let currentPageId = $('.nav-link.active').attr('data-page-id');
+    for (let i = 0; i < dataPageIds.length; i++) {
+        if (dataPageIds[i] === currentPageId) {
+            return i;
+        }
+    }
+    console.log(`No page found with id ${currentPageId} likely problem with never updating the page index`);
+    throw new Error(`No page found with id ${currentPageId}`);
+}
 
 // These are the page IDs that are used to navigate through the tabs (basically tab names)
 const dataPageIds = [
@@ -41,4 +51,4 @@ const dataPageIds = [
     "preferences",
     "debug"
 ];
-let i = 0;
+let i = -1;

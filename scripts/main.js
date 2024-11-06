@@ -536,7 +536,7 @@ $(document).ready(function () {
     }
 
     ////////////////////////////////// Helpers //////////////////////////////////
-
+    //TODO 5/11/2024 Most of these are stubs
     $(".dropdown-menu a").on("click", function () {
         const parentDataTarget = $(this).parents(".dropdown").attr("data-target");
         console.log(parentDataTarget);
@@ -611,6 +611,7 @@ $(document).ready(function () {
         $("#log_body").empty();
     });
 
+    //End of todo stubs
 
     function generateElementForConfiguration(data, type, device, text) {
         if (type === "bool") {
