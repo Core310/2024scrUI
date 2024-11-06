@@ -5,15 +5,13 @@ $(document).keydown(function (e) {
     switch (e.which) {
         case LETFTKEY:
             i = currentPageIndex();
-            i === dataPageIds.length - 1 ? i = 0 : i++;//i===lastPage? 0 : ++
-
+            i === 0 ? i = dataPageIds.length - 1 : i--;//i===lastPage? 0 : ++
             hideCurrentActivePage();
             showNewActivePAge();
             break;
         case RIGHTKEY:
             i = currentPageIndex();
-            i === 0 ? i = dataPageIds.length - 1 : i--;//i===lastPage? 0 : ++
-
+            i === dataPageIds.length - 1 ? i = 0 : i++;//i===lastPage? 0 : ++
             hideCurrentActivePage();
             showNewActivePAge();
             break;
