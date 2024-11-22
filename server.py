@@ -19,6 +19,7 @@ pcs = set()
 relay = MediaRelay()
 
 
+# Handles video transformations (Just edge detection, can late work in to include other transformations)
 class VideoTransformTrack(MediaStreamTrack):
     kind = "video"
 
@@ -26,10 +27,6 @@ class VideoTransformTrack(MediaStreamTrack):
         super().__init__()  # don't forget this!
         self.track = track
         self.transform = transform
-
-    """
-    Perform Video transformations (just need edge detection techinally) 
-    """
 
     async def recv(self):
         frame = await self.track.recv()
@@ -53,7 +50,7 @@ class VideoTransformTrack(MediaStreamTrack):
                     rows, cols, _ = img.shape
                     M = cv2.getRotationMatrix2D((cols / 2, rows / 2), frame.time * 45, 1)
                     img = cv2.warpAffine(img, M, (cols, rows))
-        
+
                     # rebuild a VideoFrame, preserving timing information
                     new_frame = VideoFrame.from_ndarray(img, format="bgr24")
                     new_frame.pts = frame.pts
@@ -143,11 +140,23 @@ async def offer(request):
     )
 
 
+# Handles peer connection close
 async def on_shutdown(app):
     # close peer connections
     coros = [pc.close() for pc in pcs]
     await asyncio.gather(*coros)
     pcs.clear()
+
+
+def handle_web_app():
+    app = web.Application()
+    app.on_shutdown.append(on_shutdown)
+    app.router.add_get("/", index)
+    app.router.add_get("/client.js", javascript)
+    app.router.add_post("/offer", offer)
+    web.run_app(
+        app, access_log=None, host=args.host, port=args.port, ssl_context=ssl_context
+    )
 
 
 if __name__ == "__main__":
@@ -176,12 +185,5 @@ if __name__ == "__main__":
         ssl_context.load_cert_chain(args.cert_file, args.key_file)
     else:
         ssl_context = None
-
-    app = web.Application()
-    app.on_shutdown.append(on_shutdown)
-    app.router.add_get("/", index)
-    app.router.add_get("/client.js", javascript)
-    app.router.add_post("/offer", offer)
-    web.run_app(
-        app, access_log=None, host=args.host, port=args.port, ssl_context=ssl_context
-    )
+    # Server is made here!
+    handle_web_app()

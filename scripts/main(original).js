@@ -1,11 +1,3 @@
-// DOM elesmens :)
-const dataChannelLog = document.getElementById('data-channel'),
-    iceConnectionLog = document.getElementById('ice-connection-state'),
-    iceGatheringLog = document.getElementById('ice-gathering-state'),
-    signalingLog = document.getElementById('signaling-state');
-//////////////////////////////////rtc Implementation^^^^ //////////////////////////////////
-
-
 $(document).ready(function () {
     // Check if local storage has preferences
     if (localStorage.getItem("preferences") == null) {
@@ -18,13 +10,6 @@ $(document).ready(function () {
 
         $("html").attr("data-bs-theme", preferences.theme);
     }
-
-
-// peer connection
-    let pc = null;
-
-// data channelf
-    let dc = null, dcInterval = null;
 
 
     ////////////////////////////////// Websocekt //////////////////////////////////
@@ -420,6 +405,32 @@ $(document).ready(function () {
             return;
         }
 
+        if (topic === "/autonav/debug/astar") {
+            const {
+                desired_heading,
+                desired_latitude,
+                desired_longitude,
+                distance_to_destination,
+                waypoints,
+                time_until_use_waypoints
+            } = msg;
+            $("#var_astar_heading").text(`${radiansToDegrees(parseFloat(desired_heading)).toFixed(3)}°`);
+            $("#var_astar_waypoint").text(formatLatLong(desired_latitude, desired_longitude, true));
+            $("#var_astar_distance").text(formatToFixed(distance_to_destination, 3));
+            $("#var_astar_waypoints").text(
+                waypoints.reduce((acc, val, i) => {
+                    if (i % 2 === 0) {
+                        acc.push([val, waypoints[i + 1]]);
+                    }
+
+                    return acc;
+                }, []).map((waypoint) => {
+                    return formatLatLong(waypoint[0], waypoint[1], true);
+                }).join(", ")
+            );
+            $("#var_astar_time").text(formatToFixed(time_until_use_waypoints, 3));
+            return;
+        }
 
         if (topic === "/autonav/position") {
             const {x, y, theta, latitude, longitude} = msg;
@@ -450,6 +461,11 @@ $(document).ready(function () {
 
         if (topic === "/autonav/cfg_space/combined/image") {
             transferImageToElement("target_combined", msg.data);
+            return;
+        }
+
+        if (topic === "/autonav/debug/astar/image") {
+            transferImageToElement("target_astar", msg.data);
             return;
         }
 
