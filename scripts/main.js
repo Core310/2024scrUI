@@ -6,8 +6,7 @@ const dataChannelLog = document.getElementById('data-channel'),
 //////////////////////////////////rtc Implementation^^^^ //////////////////////////////////
 
 
-$(document).ready(function () {
-    // Check if local storage has preferences
+document.addEventListener("DOMContentLoaded", function () {    // Check if local storage has preferences
     if (localStorage.getItem("preferences") == null) {
         savePreferences();
     } else {
@@ -25,7 +24,6 @@ $(document).ready(function () {
 
 // data channelf
     let dc = null, dcInterval = null;
-
 
     ////////////////////////////////// Websocekt //////////////////////////////////
 
@@ -171,7 +169,7 @@ $(document).ready(function () {
 
     if (!development_mode) {
         createWebsocket();
-    } else {
+    } else {//TODO 5/12/2024 On connection_state, make if dev mode OR not connected have a lost connection in the upper left on the screen (its own flexbox?) Could also make a feature to have it animated on changing from each>
         $("#connecting-state").text("Updating Data");
         $(".connecting-input").hide();
         $(".connecting").hide();
@@ -420,7 +418,6 @@ $(document).ready(function () {
             return;
         }
 
-
         if (topic === "/autonav/position") {
             const {x, y, theta, latitude, longitude} = msg;
             $("#var_position_origin").text(`(${formatToFixed(x, 4)}, ${formatToFixed(y, 4)}, ${radiansToDegrees(parseFloat(theta)).toFixed(3)}°)`);
@@ -522,7 +519,8 @@ $(document).ready(function () {
     }
 
     ////////////////////////////////// Helpers //////////////////////////////////
-    //TODO 5/11/2024 Most of these are stubs
+
+    //TODO p4 5/11/2024 Most of these are stubs
     $(".dropdown-menu a").on("click", function () {
         const parentDataTarget = $(this).parents(".dropdown").attr("data-target");
         console.log(parentDataTarget);
@@ -869,7 +867,7 @@ $(document).ready(function () {
         }
     }
 
-    //TODO 29/10/2024  Config page needs to be implemented
+    //TODO 29/10/2024 p3 #later  Config page needs to be implemented
     const regenerateConfig = () => {
         const configElement = $("#options");
         configElement.empty();
