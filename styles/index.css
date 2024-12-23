@@ -51,14 +51,14 @@ h5 > span {
     place-items: center;
 }
 
-.connecting-inner {
+.connectionPortInput {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 1rem;
+    align-self: flex-start;
 }
-
 .connecting > h3 {
     margin: 0;
 }

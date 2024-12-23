@@ -25,17 +25,17 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
 // data channelf
     let dc = null, dcInterval = null;
 
-    ////////////////////////////////// Websocekt //////////////////////////////////
+    ////////////////////////////////// Websocekt ////////////////////////////////// todo! (was rolleddback idk whr it went :(
 
     let websocket;
     const createWebsocket = () => {
+        $("#main").show();
         const userID = generateUUID();
         const url = `ws://${preferences.host}:${preferences.port}/?id=${userID}`
         websocket = new WebSocket(url);
 
         websocket.onopen = function (event) {
             $("#connecting-state").text("Updating Data");
-            $(".connecting-input").hide();
 
             send({op: "broadcast"});
             send({op: "get_nodes"});
@@ -61,8 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
             }, 500);
 
             setTimeout(() => {
-                $(".connecting").hide();
-                $("#main").show();
+
             }, 1000);
 
             setTimeout(() => {
@@ -150,10 +149,7 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
         };
 
         websocket.onclose = function (event) {
-            $("#connecting-state").text("Waiting for the Danger Zone");
-            $(".connecting").show();
-            $(".connecting-input").show();
-            $("#main").hide();
+            //TODO make to go back to connecting icon
             clearGlobals();
 
             setTimeout(() => {
@@ -170,13 +166,11 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
     if (!development_mode) {
         createWebsocket();
     } else {//TODO 5/12/2024 On connection_state, make if dev mode OR not connected have a lost connection in the upper left on the screen (its own flexbox?) Could also make a feature to have it animated on changing from each>
-        $("#connecting-state").text("Updating Data");
-        $(".connecting-input").hide();
-        $(".connecting").hide();
-        $("#main").show();
+
+
     }
 
-    var sendQueue = [];
+    const sendQueue = [];
 
     function setSystemState() {
         send({

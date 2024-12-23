@@ -4,7 +4,7 @@ const systemState = {
     mobility: false,
     estop: false
 };
-const preferences = {
+let preferences = {
     gpsFormat: "DD",
     host: "127.0.0.1",
     port: 8023,
@@ -13,10 +13,10 @@ const preferences = {
 const config = {};
 const conbus = {};
 const deviceStates = {};
-const logs = [];
+let logs = [];
 const iterator = 0;
 const iterators = [];
-const development_mode = true;
+const development_mode = false;
 const current_preset = "ERROR_NO_PRESET_AUTODETECTED";
 
 const addressKeys = {
