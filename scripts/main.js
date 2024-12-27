@@ -149,7 +149,7 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
         };
 
         websocket.onclose = function (event) {
-            //TODO make to go back to connecting icon
+            //TODO make to go back to connecting icon + notification that not connected
             clearGlobals();
 
             setTimeout(() => {
@@ -165,9 +165,11 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
 
     if (!development_mode) {
         createWebsocket();
+        ntf('Connected');
     } else {//TODO 5/12/2024 On connection_state, make if dev mode OR not connected have a lost connection in the upper left on the screen (its own flexbox?) Could also make a feature to have it animated on changing from each>
 
-
+        //Make popup that on dev mode
+        //When devMode no more, then popup as so differently
     }
 
     const sendQueue = [];
@@ -567,22 +569,24 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
         setSystemState();
     });
 
-    $("#input_port").on("change", function () {
-        const intt = parseInt($(this).val());
-        preferences.port = isNaN(intt) ? 8023 : intt;
+    $("#input_port, #input_host").on("change", function () {
+        switch (this.id) {
+            case "input_port":
+                const intt = parseInt($(this).val());
+                preferences.port = isNaN(intt) ? 8023 : intt;
 
-        if (isNaN(intt)) {
-            $(this).val(8023);
+                if (isNaN(intt)) {
+                    $(this).val(8023); //TODO if NaN, thr new error popup that contains some non int var
+                }
+                break;
+            case "input_host":
+                preferences.host = $(this).val();
+                break;
         }
 
         savePreferences();
     });
 
-    $("#input_host").on("change", function () {
-        preferences.host = $(this).val();
-
-        savePreferences();
-    });
 
     $("clear_log").on("click", function () {
         logs = [];

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!--suppress HtmlRequiredAltAttribute -->
 <html data-bs-theme="dark" lang="en">
 
 <head>
@@ -180,26 +181,33 @@
     
     <div class="page" id="configuration">
         <div class="d-flex justify-content-center mb-3">
-            <div class="flex-column" style="border: 1px solid rgba(255,255,255,0.06); padding: 10px;">
+            <div class="flex-column" style="border: 1px solid rgba(255,255,255,0); padding: 10px;">
                 <h3 style="text-align: center">Connection</h3>
+                
                 <div class="connectionPortInput">
                     <!-- Input box for IP and Port -->
                     <div class="d-flex justify-content-center mb-3 connecting-input">
                         <div class="input-group-prepend">
+                            Port:
                             <input aria-label="Port" class="form-control" id="input_port" placeholder="8023" type="text"
-                                   value="8023">
+                                   value="8023" style="width: 100px;">
                         </div>
-                        <input aria-label="Address" class="form-control" id="input_host" placeholder="127.0.0.1"
-                               type="text"
-                               value="127.0.0.1">
+                        
+                        <div class="input-group-prepend">
+                            Host IP:
+                            <input aria-label="Address" class="form-control" id="input_host" placeholder="127.0.0.1"
+                                   type="text"
+                                   value="127.0.0.1" style="width: 110px;">
+                        </div>
                     </div>
                 </div>
             </div>
-            
+        </div>
+        <div class="d-flex justify-content-center mb-3">
             <div class="flex-column">
-                <h2>Presets</h2>
+                <h2 style="text-align: center">Presets</h2>
                 <div id="controls">
-                    <h4 id="active_preset_header">
+                    <h4 id="active_preset_header" style="text-align: center">
                         Active Preset: <span id="active_preset_value">None</span>
                     </h4>
                     <div class="controls-row">
@@ -230,7 +238,6 @@
                 </div>
             </div>
         </div>
-    
     </div>
     
     <div class="page" id="preferences">
@@ -284,9 +291,9 @@
             <h3>Inflation</h3>
         </div>
         <div class="section gap flex-column">
-            <h5>Latest: <span id="var_inflation_time">0.0</span></h5>
-            <h5>Average: <span id="var_inflation_time">0.0</span></h5>
-            <h5>Max: <span id="var_inflation_time">0.0</span></h5>
+            <h5>Latest: <span id="var_inflation_time_latest">0.0</span></h5>
+            <h5>Average: <span id="var_inflation_time_average">0.0</span></h5>
+            <h5>Max: <span id="var_inflation_time_max">0.0</span></h5>
             <canvas id="inflation_performance_canvas"></canvas>
         </div>
     </div>
@@ -297,7 +304,8 @@
 
 </footer>
 
-<!-- <div class="connecting">
+<!-- Old Connecting class (Put on dev mode = false to see in action)
+<div class="connecting">
    <div class="connecting-inner">
        <div class="connecting-text">
            <div class="spinner-border text-primary" role="status">
