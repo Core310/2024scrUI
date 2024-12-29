@@ -1,4 +1,4 @@
-const systemState = {
+let systemState = {
     state: 0,
     mode: 0,
     mobility: false,
@@ -10,14 +10,14 @@ let preferences = {
     port: 8023,
     theme: "dark"
 };
-const config = {};
-const conbus = {};
-const deviceStates = {};
+let config = {};
+let conbus = {};
+let deviceStates = {};
 let logs = [];
-const iterator = 0;
+let iterator = 0;
 const iterators = [];
-const development_mode = false;//todo refactor, this should always be false!! (Make button to swtich btwn T/F, then can switch to a let instead of const)
-const current_preset = "ERROR_NO_PRESET_AUTODETECTED";
+let development_mode = false;
+let current_preset = "ERROR_NO_PRESET_AUTODETECTED";
 
 const addressKeys = {
     "autonav_serial_imu": {

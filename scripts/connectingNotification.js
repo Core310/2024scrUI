@@ -64,3 +64,4 @@ window.ntf = function (txt, cls) {
         type: cls
     });
 };
+

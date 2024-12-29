@@ -10,6 +10,7 @@
     <link href="styles/bootstrap.css" rel="stylesheet">
     <link href="styles/reset.css" rel="stylesheet">
     <link href="styles/index.css" rel="stylesheet">
+    <link href="styles/notification.css" rel="stylesheet">
     
     <link href="assets/scr_icon.png" rel="icon" sizes="32x32" type="image/png">
 </head>
@@ -202,108 +203,111 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="d-flex justify-content-center mb-3">
-            <div class="flex-column">
-                <h2 style="text-align: center">Presets</h2>
-                <div id="controls">
-                    <h4 id="active_preset_header" style="text-align: center">
-                        Active Preset: <span id="active_preset_value">None</span>
-                    </h4>
-                    <div class="controls-row">
-                        <button class="btn btn-outline-success" id="save_preset_as" type="button">Save As</button>
-                        <input aria-label="Configuration Name" class="form-control" id="preset_save_name"
-                               placeholder="Configuration Name"
-                               type="text">
-                    </div>
-                    <div class="controls-row">
-                        <button class="btn btn-outline-primary" id="save_preset_mode" type="button">Save Mode
-                        </button>
-                        <button class="btn btn-outline-danger" id="delete_preset" type="button">Delete Preset
-                        </button>
-                    </div>
-                    <div class="dropdown" data-target="preset">
-                        <button aria-expanded="false" class="btn btn-secondary dropdown-toggle"
-                                data-bs-toggle="dropdown"
-                                id="dropdown_config" type="button">
-                            Load Preset
-                        </button>
-                        <ul aria-labelledby="dropdown_preset" class="dropdown-menu" id="dropdown_elements">
-                            <li><a class="dropdown-item" data-value="alpha">Alpha</a></li>
-                            <li><a class="dropdown-item" data-value="beta">Beta</a></li>
-                            <li><a class="dropdown-item" data-value="charlie">Charlie</a></li>
-                            <li><a class="dropdown-item" data-value="delta">Delta</a></li>
-                        </ul>
+            
+            
+            <!-- Dev mode button was going to add but no real need to
+            <button class="btn btn-secondary" id="toggle_dev_mode" type="button" style="border: 1px solid rgba(255,255,255,0); padding: 10px; background: transparent">Toggle Development Mode</button>        </div>
+            -->
+            <div class="d-flex justify-content-center mb-3">
+                <div class="flex-column">
+                    <h2 style="text-align: center">Presets</h2>
+                    <div id="controls">
+                        <h4 id="active_preset_header" style="text-align: center">
+                            Active Preset: <span id="active_preset_value">None</span>
+                        </h4>
+                        <div class="controls-row">
+                            <button class="btn btn-outline-success" id="save_preset_as" type="button">Save As</button>
+                            <input aria-label="Configuration Name" class="form-control" id="preset_save_name"
+                                   placeholder="Configuration Name"
+                                   type="text">
+                        </div>
+                        <div class="controls-row">
+                            <button class="btn btn-outline-primary" id="save_preset_mode" type="button">Save Mode
+                            </button>
+                            <button class="btn btn-outline-danger" id="delete_preset" type="button">Delete Preset
+                            </button>
+                        </div>
+                        <div class="dropdown" data-target="preset">
+                            <button aria-expanded="false" class="btn btn-secondary dropdown-toggle"
+                                    data-bs-toggle="dropdown"
+                                    id="dropdown_config" type="button">
+                                Load Preset
+                            </button>
+                            <ul aria-labelledby="dropdown_preset" class="dropdown-menu" id="dropdown_elements">
+                                <li><a class="dropdown-item" data-value="alpha">Alpha</a></li>
+                                <li><a class="dropdown-item" data-value="beta">Beta</a></li>
+                                <li><a class="dropdown-item" data-value="charlie">Charlie</a></li>
+                                <li><a class="dropdown-item" data-value="delta">Delta</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    
-    <div class="page" id="preferences">
-        <div class="divider">
-            <h3>General</h3>
-        </div>
-        <div class="dropdown" data-target="theme">
-            <button aria-expanded="false" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
-                    id="dropdown_theme" type="button">
-                Theme
-            </button>
-            <ul aria-labelledby="dropdown_theme" class="dropdown-menu">
-                <li><a class="dropdown-item" data-value="light">Light</a></li>
-                <li><a class="dropdown-item" data-value="dark">Dark</a></li>
-            </ul>
-        </div>
         
-        <div class="dropdown" data-target="gpsformat">
-            <button aria-expanded="false" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
-                    id="dropdown_gpsformat" type="button">
-                GPS Format
-            </button>
-            <ul aria-labelledby="dropdown_gpsformat" class="dropdown-menu">
-                <li><a class="dropdown-item" data-value="DMS">Degrees Minutes Seconds</a></li>
-                <li><a class="dropdown-item" data-value="DMM">Decimal Minutes</a></li>
-                <li><a class="dropdown-item" data-value="DD">Decimal Degrees</a></li>
-            </ul>
-        </div>
-    </div>
-    <!-- TODO: Add logging page, Page needs to be implemented -->
-    <div class="page" id="logging">
-        <button class="btn btn-primary" id="clear_log" type="button">
-            Clear
-        </button>
-        <table class="table">
-            <thead>
-            <tr>
-                <th scope="col">Timestamp</th>
-                <th scope="col">Node</th>
-                <th scope="col">Message</th>
-            </tr>
-            </thead>
-            <tbody id="log_body">
+        <div class="page" id="preferences">
+            <div class="divider">
+                <h3>General</h3>
+            </div>
+            <div class="dropdown" data-target="theme">
+                <button aria-expanded="false" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
+                        id="dropdown_theme" type="button">
+                    Theme
+                </button>
+                <ul aria-labelledby="dropdown_theme" class="dropdown-menu">
+                    <li><a class="dropdown-item" data-value="light">Light</a></li>
+                    <li><a class="dropdown-item" data-value="dark">Dark</a></li>
+                </ul>
+            </div>
             
-            </tbody>
-        </table>
-    </div>
-    <!-- TODO: Add Add performance page (what does this page do again?)-->
-    <div class="page" id="performance">
-        <div class="divider">
-            <h3>Inflation</h3>
+            <div class="dropdown" data-target="gpsformat">
+                <button aria-expanded="false" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
+                        id="dropdown_gpsformat" type="button">
+                    GPS Format
+                </button>
+                <ul aria-labelledby="dropdown_gpsformat" class="dropdown-menu">
+                    <li><a class="dropdown-item" data-value="DMS">Degrees Minutes Seconds</a></li>
+                    <li><a class="dropdown-item" data-value="DMM">Decimal Minutes</a></li>
+                    <li><a class="dropdown-item" data-value="DD">Decimal Degrees</a></li>
+                </ul>
+            </div>
         </div>
-        <div class="section gap flex-column">
-            <h5>Latest: <span id="var_inflation_time_latest">0.0</span></h5>
-            <h5>Average: <span id="var_inflation_time_average">0.0</span></h5>
-            <h5>Max: <span id="var_inflation_time_max">0.0</span></h5>
-            <canvas id="inflation_performance_canvas"></canvas>
+        <!-- TODO: Add logging page, Page needs to be implemented -->
+        <div class="page" id="logging">
+            <button class="btn btn-primary" id="clear_log" type="button">
+                Clear
+            </button>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Timestamp</th>
+                    <th scope="col">Node</th>
+                    <th scope="col">Message</th>
+                </tr>
+                </thead>
+                <tbody id="log_body">
+                
+                </tbody>
+            </table>
+        </div>
+        <!-- TODO: Add Add performance page (what does this page do again?)-->
+        <div class="page" id="performance">
+            <div class="divider">
+                <h3>Inflation</h3>
+            </div>
+            <div class="section gap flex-column">
+                <h5>Latest: <span id="var_inflation_time_latest">0.0</span></h5>
+                <h5>Average: <span id="var_inflation_time_average">0.0</span></h5>
+                <h5>Max: <span id="var_inflation_time_max">0.0</span></h5>
+                <canvas id="inflation_performance_canvas"></canvas>
+            </div>
         </div>
     </div>
-
 </main>
 
 <footer>
 
 </footer>
-
 <!-- Old Connecting class (Put on dev mode = false to see in action)
 <div class="connecting">
    <div class="connecting-inner">
@@ -336,6 +340,7 @@
 <script src="scripts/utilities.js"></script>
 <script src="scripts/main.js"></script>
 <script src="scripts/pageNavigator.js"></script>
+<script src="scripts/connectingNotification.js"></script>
 </body>
 
 </html>

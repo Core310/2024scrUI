@@ -27,11 +27,24 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
 
     ////////////////////////////////// Websocekt ////////////////////////////////// todo! (was rolleddback idk whr it went :(
 
-    let websocket;
+    let websocket, readyStateInterval;
+    if (websocket)
+        websocket.onreadystatechange = function () {
+            if (!websocket)
+                console.log("Websocket undefined")
+            else if (websocket.readyState === 1) {
+                ntf('Connected to the server', 'success');
+                console.log("Connected to the server")
+            } else if (websocket.readyState === 3) {
+                ntf('Disconnected from the server', 'alert');
+                console.log("Disconnected from the server")
+            }
+        }
+
     const createWebsocket = () => {
         $("#main").show();
         const userID = generateUUID();
-        const url = `ws://${preferences.host}:${preferences.port}/?id=${userID}`
+        const url = `ws://${preferences.host}:${preferences.port}/?id=${userID}`//TODO, how to make this URL testable? (eg. setup fake nodes to pub)
         websocket = new WebSocket(url);
 
         websocket.onopen = function (event) {
@@ -141,6 +154,7 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
                     $("#var_system_mode").text(system["mode"] === 0 ? "Competition" : system["mode"] === 1 ? "Simulation" : "Practice");
                     $("#var_system_mobility").text(system["mobility"] ? "Enabled" : "Disabled");
 
+
                     // Update some buttons
                     $("#checkbox_system_mobility").prop("checked", system["mobility"]);
                     $("#input_system_state").val(system["state"]);
@@ -164,12 +178,14 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
     }
 
     if (!development_mode) {
+        window.onload = function () {
+            ntf('Dev Mode is disabled', 'alert');
+        };
         createWebsocket();
-        ntf('Connected');
-    } else {//TODO 5/12/2024 On connection_state, make if dev mode OR not connected have a lost connection in the upper left on the screen (its own flexbox?) Could also make a feature to have it animated on changing from each>
-
-        //Make popup that on dev mode
-        //When devMode no more, then popup as so differently
+    } else {//TODO 5/12/2024 Supress Connecting notification on dev mode = true + mayb make gif play on sample images?
+        window.onload = function () {
+            ntf('Development Mode is enabled', 'alert');
+        };
     }
 
     const sendQueue = [];
@@ -949,3 +965,10 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
         sendQueue.push(obj);
     }
 })
+
+/* Old function meant to toggle dev mode with button press
+document.getElementById('toggle_dev_mode').addEventListener('click', function () {
+    development_mode = !development_mode;
+    console.log('Development mode:', development_mode);
+});
+*/

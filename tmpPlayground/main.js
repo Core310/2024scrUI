@@ -1,3 +1,4 @@
+
 class Notification {
     constructor({...options}) {
         this.type = options.type || "success";

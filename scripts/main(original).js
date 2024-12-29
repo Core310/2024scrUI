@@ -125,7 +125,7 @@
  regenerateConfig();
 
  // Update system state
- let system = obj["system"];//TODO 5/11/2024 make system state print to ensure that its being logged
+ let system = obj["system"];
  $("#var_system_state").text(system["state"] === 0 ? "Diabled" : system["state"] === 1 ? "Autonomous" : system["state"] === 2 ? "Manual" : "Shutdown");
  $("#var_system_mode").text(system["mode"] === 0 ? "Competition" : system["mode"] === 1 ? "Simulation" : "Practice");
  $("#var_system_mobility").text(system["mobility"] ? "Enabled" : "Disabled");
@@ -539,7 +539,6 @@
  }
 
  ////////////////////////////////// Helpers //////////////////////////////////
- //TODO 5/11/2024 Most of these are stubs
  $(".dropdown-menu a").on("click", function () {
  const parentDataTarget = $(this).parents(".dropdown").attr("data-target");
  console.log(parentDataTarget);
@@ -886,7 +885,6 @@
  }
  }
 
- //TODO 29/10/2024  Config page needs to be implemented
  const regenerateConfig = () => {
  const configElement = $("#options");
  configElement.empty();
