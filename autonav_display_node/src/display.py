@@ -63,7 +63,7 @@ class Limiter:
         return False
 
 
-class BroadcastNode(Node):  # //TODO 21/11/2024
+class BroadcastNode(Node):
     def __init__(self):
         super().__init__("autonav_display_broadcast")
 
@@ -423,7 +423,7 @@ class BroadcastNode(Node):  # //TODO 21/11/2024
     def inflated_callback(self, msg: CompressedImage):
         self.push_image("/autonav/cfg_space/raw/debug", msg)
 
-    def pathingDebugCallback(self, msg: PathingDebug):  # //TODO 21/11/2024 Unused?
+    def pathingDebugCallback(self, msg: PathingDebug):  # //feature 21/11/2024 Unused? Can reImplement pathing stuff again?
         self.push_old(
             json.dumps(
                 {

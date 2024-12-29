@@ -1,31 +1,38 @@
 
-
 .px-griditem.item-success {
-  border-color: #a9eea7;
+    border-color: #a9eea7;
 }
+
 .px-griditem.item-success span {
-  background: #a9eea7;
+    background: #a9eea7;
 }
+
 .px-griditem.item-success svg {
-  color: #a9eea7;
+    color: #a9eea7;
 }
+
 .px-griditem.item-warning {
-  border-color: #f7d78b;
+    border-color: #f7d78b;
 }
+
 .px-griditem.item-warning span {
-  background: #f7d78b;
+    background: #f7d78b;
 }
+
 .px-griditem.item-warning svg {
-  color: #f7d78b;
+    color: #f7d78b;
 }
+
 .px-griditem.item-error {
-  border-color: #fb6565;
+    border-color: #fb6565;
 }
+
 .px-griditem.item-error span {
-  background: #fb6565;
+    background: #fb6565;
 }
+
 .px-griditem.item-error svg {
-  color: #fb6565;
+    color: #fb6565;
 }
 
 /*End Demo*/
@@ -40,19 +47,19 @@
 .notification {
     top: 150px;
     right: 0;
-	display: flex;
+    display: flex;
     justify-content: space-between;
-	background: rgba(255, 255, 255, 0.5);
-	border: 1px solid;
-	border-radius: 3px;
-	margin: 5px 0;
-	-webkit-animation: anm_slide_right 0.2s ease-in-out normal;
-	animation: anm_slide_right 0.2s ease-in-out normal;
-	align-items: center;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid;
+    border-radius: 3px;
+    margin: 5px 0;
+    -webkit-animation: anm_slide_right 0.2s ease-in-out normal;
+    animation: anm_slide_right 0.2s ease-in-out normal;
+    align-items: center;
     padding: 5px 32px 5px 10px;
     position: fixed;
-	-webkit-backdrop-filter: blur(2px);
-	backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
 }
 
 .notification-icon {
@@ -79,9 +86,9 @@
 }
 
 .notification.success {
-	color: #006005;
-	background: rgba(255, 255, 255, 0.78);
-	border-color: rgba(0,255,0,.4);
+    border-color: #a9eea7;
+    color: #000;
+    background: rgba(169, 238, 167, 0.51);
 }
 
 .notification.alert {
@@ -91,14 +98,16 @@
 }
 
 .notification.warning {
+    border-color: #f7d78b;
     color: yellow;
+    background: rgba(247, 215, 139, 0.51);
 }
 
 .notification.error {
-	color: red;
-	border-color: rgba(236, 96, 96, 0.4);
+    border-color: rgba(147, 78, 86, 0.51);
+    color: #000;
+    background: rgba(147, 78, 86, 0.51);
 }
-
 
 
 @keyframes anm_slide_right {

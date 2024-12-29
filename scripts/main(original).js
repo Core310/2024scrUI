@@ -613,7 +613,7 @@
  $("#log_body").empty();
  });
 
- //End of todo stubs
+ //End of stubs
 
  function generateElementForConfiguration(data, type, device, text) {
  if (type === "bool") {

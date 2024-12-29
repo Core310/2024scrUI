@@ -30,9 +30,10 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
     let websocket, readyStateInterval;
     if (websocket)
         websocket.onreadystatechange = function () {
-            if (!websocket)
-                console.log("Websocket undefined")
-            else if (websocket.readyState === 1) {
+            if (!websocket) {
+                console.log("Websocket undefined");
+                ntf('Websocket undefined', 'error');
+            } else if (websocket.readyState === 1) {
                 ntf('Connected to the server', 'success');
                 console.log("Connected to the server")
             } else if (websocket.readyState === 3) {
@@ -143,17 +144,16 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
                         }
                     }
 
-                    for (const key in obj.configs) {
+                    for (const key in obj.configs) { //TODO configs never setup, this for loop is useless
                         config[key] = obj.configs[key];
                     }
                     regenerateConfig();
 
                     // Update system state
                     let system = obj["system"];//TODO 5/11/2024 make system state print to ensure that its being logged
-                    $("#var_system_state").text(system["state"] === 0 ? "Diabled" : system["state"] === 1 ? "Autonomous" : system["state"] === 2 ? "Manual" : "Shutdown");
+                    $("#var_system_state").text(system["state"] === 0 ? "Disabled" : system["state"] === 1 ? "Autonomous" : system["state"] === 2 ? "Manual" : "Shutdown");
                     $("#var_system_mode").text(system["mode"] === 0 ? "Competition" : system["mode"] === 1 ? "Simulation" : "Practice");
                     $("#var_system_mobility").text(system["mobility"] ? "Enabled" : "Disabled");
-
 
                     // Update some buttons
                     $("#checkbox_system_mobility").prop("checked", system["mobility"]);
@@ -163,11 +163,12 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
         };
 
         websocket.onclose = function (event) {
-            //TODO make to go back to connecting icon + notification that not connected
+            //TODO (Settle after example websocket URL implemented) should the ntf go here?
             clearGlobals();
 
             setTimeout(() => {
                 // createWebsocket();
+                ntf("Reconnecting", "error");
                 location.reload();
             }, 2000);
         };
@@ -178,11 +179,12 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
     }
 
     if (!development_mode) {
-        window.onload = function () {
-            ntf('Dev Mode is disabled', 'alert');
-        };
+        /* Don't really need I guess? Since user should always assume thye are not in Dev mode
+                window.onload = function () {
+                    ntf('Dev Mode is disabled', 'alert');
+                };*/
         createWebsocket();
-    } else {//TODO 5/12/2024 Supress Connecting notification on dev mode = true + mayb make gif play on sample images?
+    } else {//TODO 5/12/2024 Supress Connecting notification on dev mode = true + mayb make gif play on sample images? (that's if there's any connecting notfi)
         window.onload = function () {
             ntf('Development Mode is enabled', 'alert');
         };
@@ -532,7 +534,7 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
 
     ////////////////////////////////// Helpers //////////////////////////////////
 
-    //TODO p4 5/11/2024 Most of these are stubs
+    //feature p4 5/11/2024 Most of these are stubs
     $(".dropdown-menu a").on("click", function () {
         const parentDataTarget = $(this).parents(".dropdown").attr("data-target");
         console.log(parentDataTarget);
@@ -592,7 +594,8 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
                 preferences.port = isNaN(intt) ? 8023 : intt;
 
                 if (isNaN(intt)) {
-                    $(this).val(8023); //TODO if NaN, thr new error popup that contains some non int var
+                    $(this).val(8023);
+                    ntf('Port must be an integer, assigned to default 8023', 'error');
                 }
                 break;
             case "input_host":
@@ -609,7 +612,7 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
         $("#log_body").empty();
     });
 
-    //End of todo stubs
+    //End of notFinished stubs feature
 
     function generateElementForConfiguration(data, type, device, text) {
         if (type === "bool") {
@@ -623,7 +626,7 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
             const select = document.createElement("select");
             select.classList.add("form-select");
             select.onchange = function () {
-                config[device][text] = select.value === 1 ? true : false;
+                config[device][text] = select.value === 1;
                 send({
                     op: "configuration",
                     device: device,
@@ -881,7 +884,6 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
         }
     }
 
-    //TODO 29/10/2024 p3 #later  Config page needs to be implemented
     const regenerateConfig = () => {
         const configElement = $("#options");
         configElement.empty();
