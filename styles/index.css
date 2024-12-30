@@ -59,6 +59,7 @@ h5 > span {
     gap: 1rem;
     align-self: flex-start;
 }
+
 .connecting > h3 {
     margin: 0;
 }
@@ -129,9 +130,9 @@ span[data-state="5"] {
 }
 
 @media screen and (max-width: 1400px) {
-	.logo {
-		display: none !important;
-	}
+    .logo {
+        display: none !important;
+    }
 }
 
 #configuration {

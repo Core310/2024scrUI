@@ -25,6 +25,9 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
 // data channelf
     let dc = null, dcInterval = null;
 
+
+
+
     ////////////////////////////////// Websocekt ////////////////////////////////// todo! (was rolleddback idk whr it went :(
 
     let websocket, readyStateInterval;

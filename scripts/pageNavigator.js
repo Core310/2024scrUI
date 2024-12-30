@@ -1,6 +1,8 @@
 $(document).keydown(function (e) {
     let LETFTKEY = 37,
-        RIGHTKEY = 39;
+        RIGHTKEY = 39,
+        QKEY = 81,
+        EKEY = 69;
 
     switch (e.which) {
         case LETFTKEY:
@@ -14,6 +16,18 @@ $(document).keydown(function (e) {
             i === dataPageIds.length - 1 ? i = 0 : i++;//i===lastPage? 0 : ++
             hideCurrentActivePage();
             showNewActivePAge();
+            break;
+        case QKEY:
+            if (e.shiftKey && e.altKey) {
+                const generalSettings = document.getElementById('General Settings');
+                generalSettings.style.display = generalSettings.style.display === 'none' ? 'block' : 'none';
+            }
+            break;
+        case EKEY:
+            if (e.shiftKey && e.altKey) {
+                const generalSettings = document.getElementById('Device State Column');
+                generalSettings.style.display = generalSettings.style.display === 'none' ? 'block' : 'none';
+            }
             break;
         default:
             return;
