@@ -163,7 +163,7 @@
                 </div>
             </div>
         </div>
-        <div class="col", id="Device State Column">
+        <div class="col" , id="Device State Column">
             <div class="divider">
                 <h3>Device States</h3>
             </div>
@@ -239,62 +239,63 @@
                 </div>
             </div>
         </div>
-        
-        <div class="page" id="preferences">
-            <div class="divider">
-                <h3>General</h3>
-            </div>
-            <div class="dropdown" data-target="theme">
-                <button aria-expanded="false" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
-                        id="dropdown_theme" type="button">
-                    Theme
-                </button>
-                <ul aria-labelledby="dropdown_theme" class="dropdown-menu">
-                    <li><a class="dropdown-item" data-value="light">Light</a></li>
-                    <li><a class="dropdown-item" data-value="dark">Dark</a></li>
-                </ul>
-            </div>
-            
-            <div class="dropdown" data-target="gpsformat">
-                <button aria-expanded="false" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
-                        id="dropdown_gpsformat" type="button">
-                    GPS Format
-                </button>
-                <ul aria-labelledby="dropdown_gpsformat" class="dropdown-menu">
-                    <li><a class="dropdown-item" data-value="DMS">Degrees Minutes Seconds</a></li>
-                    <li><a class="dropdown-item" data-value="DMM">Decimal Minutes</a></li>
-                    <li><a class="dropdown-item" data-value="DD">Decimal Degrees</a></li>
-                </ul>
-            </div>
+    </div>
+    
+    <div class="page" id="preferences">
+        <div class="divider">
+            <h3>General</h3>
         </div>
-        <div class="page" id="logging">
-            <button class="btn btn-primary" id="clear_log" type="button">
-                Clear
+        <div class="dropdown" data-target="theme">
+            <button aria-expanded="false" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
+                    id="dropdown_theme" type="button">
+                Theme
             </button>
-            <table class="table">
-                <thead>
-                <tr>
-                    <th scope="col">Timestamp</th>
-                    <th scope="col">Node</th>
-                    <th scope="col">Message</th>
-                </tr>
-                </thead>
-                <tbody id="log_body">
-                
-                </tbody>
-            </table>
+            <ul aria-labelledby="dropdown_theme" class="dropdown-menu">
+                <li><a class="dropdown-item" data-value="light">Light</a></li>
+                <li><a class="dropdown-item" data-value="dark">Dark</a></li>
+            </ul>
         </div>
-        <div class="page" id="performance">
-            <div class="divider">
-                <h3>Inflation</h3>
-            </div>
-            <div class="section gap flex-column">
-                <h5>Latest: <span id="var_inflation_time_latest">0.0</span></h5>
-                <h5>Average: <span id="var_inflation_time_average">0.0</span></h5>
-                <h5>Max: <span id="var_inflation_time_max">0.0</span></h5>
-                <canvas id="inflation_performance_canvas"></canvas>
-            </div>
+        
+        <div class="dropdown" data-target="gpsformat">
+            <button aria-expanded="false" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
+                    id="dropdown_gpsformat" type="button">
+                GPS Format
+            </button>
+            <ul aria-labelledby="dropdown_gpsformat" class="dropdown-menu">
+                <li><a class="dropdown-item" data-value="DMS">Degrees Minutes Seconds</a></li>
+                <li><a class="dropdown-item" data-value="DMM">Decimal Minutes</a></li>
+                <li><a class="dropdown-item" data-value="DD">Decimal Degrees</a></li>
+            </ul>
         </div>
+    </div>
+    <div class="page" id="logging">
+        <button class="btn btn-primary" id="clear_log" type="button">
+            Clear
+        </button>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Timestamp</th>
+                <th scope="col">Node</th>
+                <th scope="col">Message</th>
+            </tr>
+            </thead>
+            <tbody id="log_body">
+            
+            </tbody>
+        </table>
+    </div>
+    <div class="page" id="performance">
+        <div class="divider">
+            <h3>Inflation</h3>
+        </div>
+        <div class="section gap flex-column">
+            <h5>Latest: <span id="var_inflation_time_latest">0.0</span></h5>
+            <h5>Average: <span id="var_inflation_time_average">0.0</span></h5>
+            <h5>Max: <span id="var_inflation_time_max">0.0</span></h5>
+            <canvas id="inflation_performance_canvas"></canvas>
+        </div>
+    </div>
     </div>
 </main>
 
