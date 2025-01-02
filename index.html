@@ -11,6 +11,8 @@
     <link href="styles/reset.css" rel="stylesheet">
     <link href="styles/index.css" rel="stylesheet">
     <link href="styles/notification.css" rel="stylesheet">
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet"
+  />
     
     <link href="assets/scr_icon.png" rel="icon" sizes="32x32" type="image/png">
 </head>
@@ -145,12 +147,12 @@
         
         </div>
         <div class="col" id="vtest">
-            <div class="divider">
+            <div style="text-align: center;"  class="divider">
                 <h3>Vision</h3>
             </div>
             <div class="section" id="images">
                 <div class="roww">
-                    <img data-type="regular" height="640" id="target_raw_camera_left" width="480">
+                    <img data-type="regular" height="640" id="target_raw_camera_left" width="480"> <!-- TODO Can I make this auto width/height? So it will resize when I take out other parts? -->
                     <img data-type="regular" height="640" id="target_raw_camera_right" width="480">
                 </div>
                 <div class="roww">
@@ -159,11 +161,11 @@
                 </div>
                 <div class="roww">
                     <img data-type="small" height="320" id="target_combined" width="320">
-                    <img data-type="small" height="320" id="target_astar" width="320">
+                    <img data-type="small" height="320" id="target_astar" width="320"> <!-- Todo astar is deprecated! Will need two change out for new image feed + find all other  -->
                 </div>
             </div>
         </div>
-        <div class="col" , id="Device State Column">
+        <div class="col" id="Device State Column">
             <div class="divider">
                 <h3>Device States</h3>
             </div>
@@ -174,7 +176,6 @@
             </div>
         </div>
     </div>
-    
     <div class="page" id="configuration">
         <div class="d-flex justify-content-center mb-3">
             <div class="flex-column" style="border: 1px solid rgba(255,255,255,0); padding: 10px;">
@@ -240,7 +241,6 @@
             </div>
         </div>
     </div>
-    
     <div class="page" id="preferences">
         <div class="divider">
             <h3>General</h3>

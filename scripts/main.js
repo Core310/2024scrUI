@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
     ////////////////////////////////// Websocekt ////////////////////////////////// todo! (was rolleddback idk whr it went :(
 
     let websocket, readyStateInterval;
-    if (websocket)
+    if (websocket) 
         websocket.onreadystatechange = function () {
             if (!websocket) {
                 console.log("Websocket undefined");
@@ -48,11 +48,14 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
     const createWebsocket = () => {
         $("#main").show();
         const userID = generateUUID();
-        const url = `ws://${preferences.host}:${preferences.port}/?id=${userID}`//TODO, how to make this URL testable? (eg. setup fake nodes to pub)
-        websocket = new WebSocket(url);
+
+
+        const url = `ws://${preferences.host}:${preferences.port}/?id=${userID}`
+        websocket = new WebSocket("ws://localhost:8080");
+        /*websocket = new WebSocket(url); TODO SWITCH TO THIS ON NON DEV MODE (vise versa)*/
 
         websocket.onopen = function (event) {
-            $("#connecting-state").text("Updating Data");
+            $("#connecting-state").text("Updating Data");//fixme connecting state is deprecated, need to re-estab it again
 
             send({op: "broadcast"});
             send({op: "get_nodes"});
@@ -87,6 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
                 }
             }, 3000);
         };
+
 
         websocket.onmessage = function (event) {
             const messages = event.data.split("\n");

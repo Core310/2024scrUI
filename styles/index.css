@@ -14,6 +14,7 @@ body {
 
 .page[data-type="columns"] > .col {
     flex: 1;
+
 }
 
 .divider {
@@ -29,11 +30,6 @@ h5 > span {
     font-size: 17px;
     font-weight: 400;
     color: #999;
-}
-
-#images {
-    display: flex;
-    gap: 1rem;
 }
 
 .connecting {
@@ -177,10 +173,14 @@ span[data-state="5"] {
 }
 
 #images {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    justify-content: center;
+    align-items: center;
     gap: 1rem;
+
+
 }
+
 
 img[data-type="regular"] {
     width: 480px !important;
@@ -231,3 +231,5 @@ img[data-type="small"] {
 #active_preset_value {
     color: #ff7bff;
 }
+
+
