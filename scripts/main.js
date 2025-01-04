@@ -26,12 +26,10 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
     let dc = null, dcInterval = null;
 
 
-
-
     ////////////////////////////////// Websocekt ////////////////////////////////// todo! (was rolleddback idk whr it went :(
 
     let websocket, readyStateInterval;
-    if (websocket) 
+    if (websocket)
         websocket.onreadystatechange = function () {
             if (!websocket) {
                 console.log("Websocket undefined");

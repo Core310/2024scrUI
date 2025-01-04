@@ -22,7 +22,9 @@ const fromBytesToUInt = (bytes) => {
 const fromBytesToBool = (bytes) => {
     return getBytesView(bytes).getUint8(0) === 1;
 }
-
+/**
+ * @Deprecated
+ */
 const transferImageToElementOld = (id, data) => {
     const img = document.getElementById(id);
     img.src = "data:image/jpeg;base64," + data;
@@ -36,7 +38,24 @@ const transferImageToElement = (id, data) => {
     const imageUrl = urlCreator.createObjectURL(blob);
     img.src = imageUrl;
 }
+/*
+This is the ver that works with sending gif/img for testing with URL link, refactor to get it
+const transferImageToElement = (id, data) => {
+    const img = document.getElementById(id);
+    if (typeof data === 'string' && data.startsWith('http')) {
+        img.src = data;
+    } else {
+        const uint8Array = new Uint8Array(data);
+        const blob = new Blob([uint8Array], {type: "image/jpeg"});
+        const urlCreator = window.URL || window.webkitURL;
+        const imageUrl = urlCreator.createObjectURL(blob);
+        img.src = imageUrl;
+    }
+}*/
 
+/**
+ * @Deprecated
+ */
 const trasferImageBytesToElement = (id, data) => {
     const img = document.getElementById(id);
     const msgarray = new Uint8Array(data);

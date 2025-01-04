@@ -1,11 +1,12 @@
 const WebSocket = require('ws');
-
+const {readFileSync} = require('fs');
 const server = new WebSocket.Server({port: 8080});
 
 server.on('connection', (ws) => {
     console.log('Client connected');
 
     const sendData = () => {
+
         let deviceState = JSON.stringify({
             op: 'data',
             topic: '/scr/state/device',
@@ -41,9 +42,8 @@ server.on('connection', (ws) => {
             op: 'data',
             topic: '/autonav/cfg_space/raw/image/left_small',
             timestamp: new Date().toISOString(),
-            data: 'data:image/jpeg;base64,'
+            data: 'https://c.tenor.com/82Rr2PPBCtIAAAAd/tenor.gif'
         });
-
         let rightSmall = JSON.stringify({
             op: 'data',
             topic: '/autonav/cfg_space/raw/image/right_small',
@@ -90,6 +90,7 @@ server.on('connection', (ws) => {
             latitude: Math.random() * 10,
             longitude: Math.random() * 10
         });
+
         let motorFeedbackData = JSON.stringify({
             op: 'data',
             topic: '/autonav/MotorFeedback',
@@ -130,10 +131,11 @@ server.on('connection', (ws) => {
         ws.send(deviceState);
         ws.send(logging);
         ws.send(conbus);
-        ws.send(combined);
-        ws.send(leftSmall);
-        ws.send(rightSmall);
-        ws.send(compressedRight);
+        setInterval(() => ws.send(combined), 100);
+        setInterval(() => ws.send(leftSmall), 100);
+        setInterval(() => ws.send(rightSmall), 100);
+        setInterval(() => ws.send(compressedRight), 100);
+        setInterval(() => ws.send(compressedLeft), 0.001);
         ws.send(compressedLeft);
         ws.send(imuData);
         ws.send(positionData);
@@ -143,7 +145,7 @@ server.on('connection', (ws) => {
         ws.send(motorInput);
     };
     // Send data every second
-    const interval = setInterval(sendData, 100);
+    const interval = setInterval(sendData, 1000);
 
     ws.on('close', () => {
         console.log('Client disconnected');
@@ -155,21 +157,6 @@ server.on('connection', (ws) => {
         clearInterval(interval);
     });
 });
-async function fetchImageData(url) {
-    try {
-        const response = await fetch(url);
-        const blob = await response.blob();
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result);
-            reader.onerror = reject;
-            reader.readAsDataURL(blob);
-        });
-    } catch (error) {
-        console.error('Error fetching image:', error);
-        return null;
-    }
-}
 
 
 console.log('WebSocket server is running on ws://localhost:8080');
