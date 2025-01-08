@@ -30,6 +30,7 @@ const transferImageToElementOld = (id, data) => {
     img.src = "data:image/jpeg;base64," + data;
 }
 
+/* Old ver
 const transferImageToElement = (id, data) => {
     const img = document.getElementById(id);
     const uint8Array = new Uint8Array(data);
@@ -38,8 +39,8 @@ const transferImageToElement = (id, data) => {
     const imageUrl = urlCreator.createObjectURL(blob);
     img.src = imageUrl;
 }
-/*
-This is the ver that works with sending gif/img for testing with URL link, refactor to get it
+*/
+//This is the ver that works with sending gif/img for testing with URL link, refactor to get it
 const transferImageToElement = (id, data) => {
     const img = document.getElementById(id);
     if (typeof data === 'string' && data.startsWith('http')) {
@@ -51,7 +52,7 @@ const transferImageToElement = (id, data) => {
         const imageUrl = urlCreator.createObjectURL(blob);
         img.src = imageUrl;
     }
-}*/
+}
 
 /**
  * @Deprecated

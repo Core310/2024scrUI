@@ -22,13 +22,14 @@ server.on('connection', (ws) => {
             data: 'data:image/jpeg;base64,',
             node: 'autonav'
         });
+        let imgData = 'https://i.makeagif.com/media/2-16-2022/EXy2mr.gif';
 
         let conbus = JSON.stringify({
             op: 'data',
             topic: '/autonav/conbus',
             timestamp: new Date().toISOString(),
             id: 0,
-            data: 'data:image/jpeg;base64,'
+            data: imgData
         });
 
         let combined = JSON.stringify({
@@ -42,27 +43,28 @@ server.on('connection', (ws) => {
             op: 'data',
             topic: '/autonav/cfg_space/raw/image/left_small',
             timestamp: new Date().toISOString(),
-            data: 'https://c.tenor.com/82Rr2PPBCtIAAAAd/tenor.gif'
+            data: imgData
         });
+
         let rightSmall = JSON.stringify({
             op: 'data',
             topic: '/autonav/cfg_space/raw/image/right_small',
             timestamp: new Date().toISOString(),
-            data: 'data:image/jpeg;base64,'
+            data: imgData
         });
 
         let compressedRight = JSON.stringify({
             op: 'data',
             topic: '/autonav/camera/compressed/right',
             timestamp: new Date().toISOString(),
-            data: 'data:image/jpeg;base64,'
+            data: imgData
         });
 
         let compressedLeft = JSON.stringify({
             op: 'data',
             topic: '/autonav/camera/compressed/left',
             timestamp: new Date().toISOString(),
-            data: 'data:image/jpeg;base64,'
+            data: imgData
         });
 
         let imuData = JSON.stringify({
@@ -131,12 +133,13 @@ server.on('connection', (ws) => {
         ws.send(deviceState);
         ws.send(logging);
         ws.send(conbus);
-        setInterval(() => ws.send(combined), 100);
-        setInterval(() => ws.send(leftSmall), 100);
-        setInterval(() => ws.send(rightSmall), 100);
-        setInterval(() => ws.send(compressedRight), 100);
-        setInterval(() => ws.send(compressedLeft), 0.001);
-        ws.send(compressedLeft);
+        setInterval(() => {
+            ws.send(combined);
+            ws.send(leftSmall);
+            ws.send(rightSmall);
+            ws.send(compressedRight);
+            ws.send(compressedLeft);
+        }, 500);
         ws.send(imuData);
         ws.send(positionData);
         ws.send(motorFeedbackData);
