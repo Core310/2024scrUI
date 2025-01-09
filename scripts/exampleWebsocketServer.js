@@ -1,5 +1,4 @@
 const WebSocket = require('ws');
-const {readFileSync} = require('fs');
 const server = new WebSocket.Server({port: 8080});
 
 server.on('connection', (ws) => {

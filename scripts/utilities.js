@@ -34,7 +34,7 @@ const transferImageToElementOld = (id, data) => {
 const transferImageToElement = (id, data) => {
     if (development_mode) {//Used to send over example web socket with http document input
         const img = document.getElementById(id);
-        if (typeof data === 'string' && data.startsWith('http')) {
+        if (typeof data === 'string' ) {
             img.src = data;
         } else {
             const uint8Array = new Uint8Array(data);
