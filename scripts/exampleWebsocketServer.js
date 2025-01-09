@@ -22,7 +22,7 @@ server.on('connection', (ws) => {
             data: 'data:image/jpeg;base64,',
             node: 'autonav'
         });
-        let imgData = 'https://i.makeagif.com/media/2-16-2022/EXy2mr.gif';
+        let imgData = 'https://www.greenlaundry.net/blog/wp-content/uploads/2011/11/animalsintrees-1.gif';
 
         let conbus = JSON.stringify({
             op: 'data',

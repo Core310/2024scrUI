@@ -30,28 +30,28 @@ const transferImageToElementOld = (id, data) => {
     img.src = "data:image/jpeg;base64," + data;
 }
 
-/* Old ver
+
 const transferImageToElement = (id, data) => {
-    const img = document.getElementById(id);
-    const uint8Array = new Uint8Array(data);
-    const blob = new Blob([uint8Array], {type: "image/jpeg"});
-    const urlCreator = window.URL || window.webkitURL;
-    const imageUrl = urlCreator.createObjectURL(blob);
-    img.src = imageUrl;
-}
-*/
-//This is the ver that works with sending gif/img for testing with URL link, refactor to get it
-const transferImageToElement = (id, data) => {
-    const img = document.getElementById(id);
-    if (typeof data === 'string' && data.startsWith('http')) {
-        img.src = data;
+    if (development_mode) {//Used to send over example web socket with http document input
+        const img = document.getElementById(id);
+        if (typeof data === 'string' && data.startsWith('http')) {
+            img.src = data;
+        } else {
+            const uint8Array = new Uint8Array(data);
+            const blob = new Blob([uint8Array], {type: "image/jpeg"});
+            const urlCreator = window.URL || window.webkitURL;
+            const imageUrl = urlCreator.createObjectURL(blob);
+            img.src = imageUrl;
+        }
     } else {
+        const img = document.getElementById(id);
         const uint8Array = new Uint8Array(data);
         const blob = new Blob([uint8Array], {type: "image/jpeg"});
         const urlCreator = window.URL || window.webkitURL;
         const imageUrl = urlCreator.createObjectURL(blob);
         img.src = imageUrl;
     }
+
 }
 
 /**

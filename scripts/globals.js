@@ -16,7 +16,7 @@ let deviceStates = {};
 let logs = [];
 let iterator = 0;
 const iterators = [];
-let development_mode = false;
+let development_mode = true;
 let current_preset = "ERROR_NO_PRESET_AUTODETECTED";
 
 const addressKeys = {

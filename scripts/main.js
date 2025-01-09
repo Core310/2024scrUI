@@ -193,6 +193,7 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
         window.onload = function () {
             ntf('Development Mode is enabled', 'alert');
         };
+        createWebsocket();
     }
 
     const sendQueue = [];
@@ -972,8 +973,8 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
         sendQueue.push(obj);
     }
 })
-
-/* Old function meant to toggle dev mode with button press
+//Old function meant to toggle dev mode with button press
+/*
 document.getElementById('toggle_dev_mode').addEventListener('click', function () {
     development_mode = !development_mode;
     console.log('Development mode:', development_mode);
