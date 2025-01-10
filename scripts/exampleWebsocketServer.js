@@ -14,7 +14,7 @@ server.on('connection', (ws) => {
             state: '0'
         });
 
-        let logging = JSON.stringify({
+        let logging = JSON.stringify({//todo, not sure what to put for example data here
             op: 'data',
             topic: '/scr/logging',
             timestamp: new Date().toISOString(),

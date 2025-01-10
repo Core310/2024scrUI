@@ -28,9 +28,10 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
 
     ////////////////////////////////// Websocekt ////////////////////////////////// todo! (was rolleddback idk whr it went :(
 
-    let websocket, readyStateInterval;
+    let websocket;
     if (websocket)
         websocket.onreadystatechange = function () {
+            //When do these happen?
             if (!websocket) {
                 console.log("Websocket undefined");
                 ntf('Websocket undefined', 'error');
@@ -49,10 +50,13 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
 
 
         const url = `ws://${preferences.host}:${preferences.port}/?id=${userID}`
-        websocket = new WebSocket("ws://localhost:8080");
-        /*websocket = new WebSocket(url); TODO SWITCH TO THIS ON NON DEV MODE (vise versa)*/
+        if (development_mode)
+            websocket = new WebSocket("ws://localhost:8080");
+        else
+            websocket = new WebSocket(url);
 
         websocket.onopen = function (event) {
+            ntf('Connected to the server', 'success');
             $("#connecting-state").text("Updating Data");//fixme connecting state is deprecated, need to re-estab it again
 
             send({op: "broadcast"});
@@ -168,14 +172,12 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
         };
 
         websocket.onclose = function (event) {
-            //TODO (Settle after example websocket URL implemented) should the ntf go here?
             clearGlobals();
 
             setTimeout(() => {
-                // createWebsocket();
-                ntf("Reconnecting", "error");
-                location.reload();
-            }, 2000);
+                ntf("Connection Closed", "error");
+                createWebsocket();
+            }, 1);
         };
 
         websocket.onerror = function (event) {
@@ -183,7 +185,7 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
         };
     }
 
-    if (!development_mode) {// TODO get connecting notif for both (why not working?)
+    if (!development_mode) {
         /* Don't really need I guess? Since user should always assume thye are not in Dev mode
                 window.onload = function () {
                     ntf('Dev Mode is disabled', 'alert');

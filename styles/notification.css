@@ -37,29 +37,25 @@
 
 /*End Demo*/
 .notifications {
-    position: relative;
-    left: 0;
-    bottom: 0;
-    z-index: 0;
+    position: fixed;
+    top: 99px;
+    right: 10px;
+    z-index: 750;
     padding: 15px;
+    margin-top: 10px;
 }
 
+
 .notification {
-    top: 150px;
-    right: 0;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
     display: flex;
     justify-content: space-between;
-    background: rgba(255, 255, 255, 0.5);
-    border: 1px solid;
-    border-radius: 3px;
-    margin: 5px 0;
-    -webkit-animation: anm_slide_right 0.2s ease-in-out normal;
-    animation: anm_slide_right 0.2s ease-in-out normal;
     align-items: center;
-    padding: 5px 32px 5px 10px;
-    position: fixed;
-    -webkit-backdrop-filter: blur(2px);
-    backdrop-filter: blur(2px);
 }
 
 .notification-icon {
