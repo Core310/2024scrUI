@@ -183,13 +183,13 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
         };
     }
 
-    if (!development_mode) {
+    if (!development_mode) {// TODO get connecting notif for both (why not working?)
         /* Don't really need I guess? Since user should always assume thye are not in Dev mode
                 window.onload = function () {
                     ntf('Dev Mode is disabled', 'alert');
                 };*/
         createWebsocket();
-    } else {//TODO 5/12/2024 Supress Connecting notification on dev mode = true + mayb make gif play on sample images? (that's if there's any connecting notfi)
+    } else {
         window.onload = function () {
             ntf('Development Mode is enabled', 'alert');
         };
@@ -599,12 +599,14 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
                 const intt = parseInt($(this).val());
                 preferences.port = isNaN(intt) ? 8023 : intt;
 
-                if (isNaN(intt)) {
+                if (/\D/.test($(this).val())) {//check for non-integer vals
                     $(this).val(8023);
                     ntf('Port must be an integer, assigned to default 8023', 'error');
+                    console.log("Port must be an integer, assigned to default 8023. Delete following if statement " +
+                        "to unforce this: if (/\\D/.test($(this).val())) {//check for non-integer vals");
                 }
                 break;
-            case "input_host":
+            case "input_host"://some IPs may have characters so no need 2 check for it
                 preferences.host = $(this).val();
                 break;
         }
