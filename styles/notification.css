@@ -71,14 +71,16 @@
 }
 
 .notification .close {
-    padding: 0 7px;
-    margin-left: 25px;
     cursor: pointer;
-    position: absolute;
-    right: 5px;
-    top: 43%;
-    line-height: 0;
-    transform: translate(0, 0);
+
+    /*    padding: 0 7px;
+        margin-left: 20px;
+        cursor: pointer;
+        position: absolute;
+        right: 9px;
+        top: 43%;
+        line-height: 0;
+        transform: translate(0, 0);*/
 }
 
 .notification.success {
