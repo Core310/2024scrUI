@@ -4,14 +4,15 @@ $(document).keydown(function (e) {
         QKEY = 81,
         EKEY = 69;
 
+
     switch (e.which) {
-        case LETFTKEY:
+        case RIGHTKEY:
             i = currentPageIndex();
             i === 0 ? i = dataPageIds.length - 1 : i--;//i===lastPage? 0 : ++
             hideCurrentActivePage();
             showNewActivePAge();
             break;
-        case RIGHTKEY:
+        case LEFTKEY:
             i = currentPageIndex();
             i === dataPageIds.length - 1 ? i = 0 : i++;//i===lastPage? 0 : ++
             hideCurrentActivePage();
