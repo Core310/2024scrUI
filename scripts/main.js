@@ -48,7 +48,6 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
         $("#main").show();
         const userID = generateUUID();
 
-
         const url = `ws://${preferences.host}:${preferences.port}/?id=${userID}`
         if (development_mode)
             websocket = new WebSocket("ws://localhost:8080");
@@ -56,6 +55,11 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
             websocket = new WebSocket(url);
 
         websocket.onopen = function (event) {
+            if (connected) {
+                connected = !connected;
+                ntfClear(); // Clear the persistent notification
+            }
+
             ntf('Connected to the server', 'success');
             $("#connecting-state").text("Updating Data");//fixme connecting state is deprecated, need to re-estab it again
 
@@ -173,15 +177,20 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
 
         websocket.onclose = function (event) {
             clearGlobals();
+            if (!connected) {
+                console.log("ahh");
+                ntf('Disconnected from the server', 'error');
+                connected = !connected
+            }
 
             setTimeout(() => {
-                ntf("Connection Closed", "error");
                 createWebsocket();
             }, 1);
         };
 
         websocket.onerror = function (event) {
             console.error(event);
+
         };
     }
 
@@ -661,7 +670,7 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
             span.classList.add("input-group-text");
             span.innerText = text;
 
-            div.appendChild(span);
+            div.appendChild(spntfan);
             div.appendChild(select);
             return div;
         } else if (type === "float") {

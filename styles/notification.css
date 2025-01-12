@@ -105,15 +105,3 @@
     background: rgba(147, 78, 86, 0.51);
 }
 
-
-@keyframes anm_slide_right {
-    from {
-        transform: translate(-110%, 0);
-        opacity: 0;
-    }
-
-    to {
-        transform: translate(0, 0);
-        opacity: 1;
-    }
-}

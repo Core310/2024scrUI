@@ -17,6 +17,7 @@ let logs = [];
 let iterator = 0;
 const iterators = [];
 let development_mode = true;
+let connected = false;
 let current_preset = "ERROR_NO_PRESET_AUTODETECTED";
 
 const addressKeys = {

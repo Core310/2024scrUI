@@ -3,12 +3,17 @@ class Notification {
         this.type = options.type || "success";
         this.message = options.message || "";
         this.timeout = options.timeout || 1500;
-        //if not success then error and timeout should increse
-        if (this.type !== "success") {
-            this.timeout = this.timeout * 2;
+        //if not success then error and timeout should increase
+        if (this.message === "Disconnected from the server") {
+            this.timeout = 2147483647;
+        } else {
+            this.timeout = 3000;
         }
+
+
         this.bind();
     }
+
 
     build() {
         //element
@@ -65,3 +70,10 @@ window.ntf = function (txt, cls) {
     });
 };
 
+
+window.ntfClear = function () {
+    let notificationsWrapper = document.querySelector(".notifications");
+    if (notificationsWrapper && notificationsWrapper.firstChild) {
+        notificationsWrapper.removeChild(notificationsWrapper.firstChild);
+    }
+};
