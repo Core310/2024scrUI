@@ -14,6 +14,7 @@ body {
 
 .page[data-type="columns"] > .col {
     flex: 1;
+
 }
 
 .divider {
@@ -31,11 +32,6 @@ h5 > span {
     color: #999;
 }
 
-#images {
-    display: flex;
-    gap: 1rem;
-}
-
 .connecting {
     position: absolute;
     width: 100vw;
@@ -51,12 +47,13 @@ h5 > span {
     place-items: center;
 }
 
-.connecting-inner {
+.connectionPortInput {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 1rem;
+    align-self: flex-start;
 }
 
 .connecting > h3 {
@@ -129,9 +126,9 @@ span[data-state="5"] {
 }
 
 @media screen and (max-width: 1400px) {
-	.logo {
-		display: none !important;
-	}
+    .logo {
+        display: none !important;
+    }
 }
 
 #configuration {
@@ -176,10 +173,14 @@ span[data-state="5"] {
 }
 
 #images {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    justify-content: center;
+    align-items: center;
     gap: 1rem;
+
+
 }
+
 
 img[data-type="regular"] {
     width: 480px !important;
@@ -224,8 +225,11 @@ img[data-type="small"] {
 
 #vtest {
     min-width: 1000px;
+
 }
 
 #active_preset_value {
     color: #ff7bff;
 }
+
+

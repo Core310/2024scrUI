@@ -1,21 +1,34 @@
 $(document).keydown(function (e) {
-    let LEFTKEY = 37,
-        RIGHTKEY = 39;
+    let LETFTKEY = 37,
+        RIGHTKEY = 39,
+        QKEY = 81,
+        EKEY = 69;
+
 
     switch (e.which) {
         case RIGHTKEY:
             i = currentPageIndex();
-            i === dataPageIds.length - 1 ? i = 0 : i++;//i===lastPage? 0 : ++
-
+            i === 0 ? i = dataPageIds.length - 1 : i--;//i===lastPage? 0 : ++
             hideCurrentActivePage();
             showNewActivePAge();
             break;
         case LEFTKEY:
             i = currentPageIndex();
-            i === 0 ? i = dataPageIds.length - 1 : i--;//i===lastPage? 0 : ++
-
+            i === dataPageIds.length - 1 ? i = 0 : i++;//i===lastPage? 0 : ++
             hideCurrentActivePage();
             showNewActivePAge();
+            break;
+        case QKEY:
+            if (e.shiftKey && e.altKey) {
+                const generalSettings = document.getElementById('General Settings');
+                generalSettings.style.display = generalSettings.style.display === 'none' ? 'block' : 'none';
+            }
+            break;
+        case EKEY:
+            if (e.shiftKey && e.altKey) {
+                const generalSettings = document.getElementById('Device State Column');
+                generalSettings.style.display = generalSettings.style.display === 'none' ? 'block' : 'none';
+            }
             break;
         default:
             return;
@@ -27,11 +40,8 @@ $(document).keydown(function (e) {
 const dataPageIds = [
     "dashboard",
     "vision",
-    "logging",
     "configuration",
-    "conbus",
-    "preferences",
-    "debug"
+    "preferences"
 ];
 let i = -1;
 

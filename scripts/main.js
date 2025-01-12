@@ -1,5 +1,12 @@
-$(document).ready(function () {
-    // Check if local storage has preferences
+// DOM elesmens :)
+const dataChannelLog = document.getElementById('data-channel'),
+    iceConnectionLog = document.getElementById('ice-connection-state'),
+    iceGatheringLog = document.getElementById('ice-gathering-state'),
+    signalingLog = document.getElementById('signaling-state');
+//////////////////////////////////rtc Implementation^^^^ //////////////////////////////////
+
+
+document.addEventListener("DOMContentLoaded", function () {    // Check if local storage has preferences
     if (localStorage.getItem("preferences") == null) {
         savePreferences();
     } else {
@@ -11,16 +18,50 @@ $(document).ready(function () {
         $("html").attr("data-bs-theme", preferences.theme);
     }
 
-    ////////////////////////////////// Websocekt //////////////////////////////////
 
-    var websocket;
+// peer connection
+    let pc = null;
+
+// data channelf
+    let dc = null, dcInterval = null;
+
+
+    ////////////////////////////////// Websocekt ////////////////////////////////// todo! (was rolleddback idk whr it went :(
+
+    let websocket;
+    if (websocket)
+        websocket.onreadystatechange = function () {
+            //When do these happen?
+            if (!websocket) {
+                console.log("Websocket undefined");
+                ntf('Websocket undefined', 'error');
+            } else if (websocket.readyState === 1) {
+                ntf('Connected to the server', 'success');
+                console.log("Connected to the server")
+            } else if (websocket.readyState === 3) {
+                ntf('Disconnected from the server', 'alert');
+                console.log("Disconnected from the server")
+            }
+        }
+
     const createWebsocket = () => {
+        $("#main").show();
         const userID = generateUUID();
-        websocket = new WebSocket(`ws://${preferences.host}:${preferences.port}/?id=${userID}`);
+
+        const url = `ws://${preferences.host}:${preferences.port}/?id=${userID}`
+        if (development_mode)
+            websocket = new WebSocket("ws://localhost:8080");
+        else
+            websocket = new WebSocket(url);
 
         websocket.onopen = function (event) {
-            $("#connecting-state").text("Updating Data");
-            $(".connecting-input").hide();
+            if (connected) {
+                connected = !connected;
+                ntfClear(); // Clear the persistent notification
+            }
+
+            ntf('Connected to the server', 'success');
+            $("#connecting-state").text("Updating Data");//fixme connecting state is deprecated, need to re-estab it again
 
             send({op: "broadcast"});
             send({op: "get_nodes"});
@@ -46,8 +87,7 @@ $(document).ready(function () {
             }, 500);
 
             setTimeout(() => {
-                $(".connecting").hide();
-                $("#main").show();
+
             }, 1000);
 
             setTimeout(() => {
@@ -56,6 +96,7 @@ $(document).ready(function () {
                 }
             }, 3000);
         };
+
 
         websocket.onmessage = function (event) {
             const messages = event.data.split("\n");
@@ -116,14 +157,14 @@ $(document).ready(function () {
                         }
                     }
 
-                    for (const key in obj.configs) {
+                    for (const key in obj.configs) { //TODO configs never setup, this for loop is useless
                         config[key] = obj.configs[key];
                     }
                     regenerateConfig();
 
                     // Update system state
-                    let system = obj["system"];
-                    $("#var_system_state").text(system["state"] === 0 ? "Diabled" : system["state"] === 1 ? "Autonomous" : system["state"] === 2 ? "Manual" : "Shutdown");
+                    let system = obj["system"];//TODO 5/11/2024 make system state print to ensure that its being logged
+                    $("#var_system_state").text(system["state"] === 0 ? "Disabled" : system["state"] === 1 ? "Autonomous" : system["state"] === 2 ? "Manual" : "Shutdown");
                     $("#var_system_mode").text(system["mode"] === 0 ? "Competition" : system["mode"] === 1 ? "Simulation" : "Practice");
                     $("#var_system_mobility").text(system["mobility"] ? "Enabled" : "Disabled");
 
@@ -135,33 +176,38 @@ $(document).ready(function () {
         };
 
         websocket.onclose = function (event) {
-            $("#connecting-state").text("Waiting for the Danger Zone");
-            $(".connecting").show();
-            $(".connecting-input").show();
-            $("#main").hide();
             clearGlobals();
+            if (!connected) {
+                console.log("ahh");
+                ntf('Disconnected from the server', 'error');
+                connected = !connected
+            }
 
             setTimeout(() => {
-                // createWebsocket();
-                location.reload();
-            }, 2000);
+                createWebsocket();
+            }, 1);
         };
 
         websocket.onerror = function (event) {
             console.error(event);
+
         };
     }
 
     if (!development_mode) {
+        /* Don't really need I guess? Since user should always assume thye are not in Dev mode
+                window.onload = function () {
+                    ntf('Dev Mode is disabled', 'alert');
+                };*/
         createWebsocket();
     } else {
-        $("#connecting-state").text("Updating Data");
-        $(".connecting-input").hide();
-        $(".connecting").hide();
-        $("#main").show();
+        window.onload = function () {
+            ntf('Development Mode is enabled', 'alert');
+        };
+        createWebsocket();
     }
 
-    var sendQueue = [];
+    const sendQueue = [];
 
     function setSystemState() {
         send({
@@ -403,33 +449,6 @@ $(document).ready(function () {
             return;
         }
 
-        if (topic === "/autonav/debug/astar") {
-            const {
-                desired_heading,
-                desired_latitude,
-                desired_longitude,
-                distance_to_destination,
-                waypoints,
-                time_until_use_waypoints
-            } = msg;
-            $("#var_astar_heading").text(`${radiansToDegrees(parseFloat(desired_heading)).toFixed(3)}°`);
-            $("#var_astar_waypoint").text(formatLatLong(desired_latitude, desired_longitude, true));
-            $("#var_astar_distance").text(formatToFixed(distance_to_destination, 3));
-            $("#var_astar_waypoints").text(
-                waypoints.reduce((acc, val, i) => {
-                    if (i % 2 === 0) {
-                        acc.push([val, waypoints[i + 1]]);
-                    }
-
-                    return acc;
-                }, []).map((waypoint) => {
-                    return formatLatLong(waypoint[0], waypoint[1], true);
-                }).join(", ")
-            );
-            $("#var_astar_time").text(formatToFixed(time_until_use_waypoints, 3));
-            return;
-        }
-
         if (topic === "/autonav/position") {
             const {x, y, theta, latitude, longitude} = msg;
             $("#var_position_origin").text(`(${formatToFixed(x, 4)}, ${formatToFixed(y, 4)}, ${radiansToDegrees(parseFloat(theta)).toFixed(3)}°)`);
@@ -459,11 +478,6 @@ $(document).ready(function () {
 
         if (topic === "/autonav/cfg_space/combined/image") {
             transferImageToElement("target_combined", msg.data);
-            return;
-        }
-
-        if (topic === "/autonav/debug/astar/image") {
-            transferImageToElement("target_astar", msg.data);
             return;
         }
 
@@ -536,7 +550,8 @@ $(document).ready(function () {
     }
 
     ////////////////////////////////// Helpers //////////////////////////////////
-    //TODO 5/11/2024 Most of these are stubs
+
+    //feature p4 5/11/2024 Most of these are stubs
     $(".dropdown-menu a").on("click", function () {
         const parentDataTarget = $(this).parents(".dropdown").attr("data-target");
         console.log(parentDataTarget);
@@ -589,29 +604,34 @@ $(document).ready(function () {
         setSystemState();
     });
 
-    $("#input_port").on("change", function () {
-        const intt = parseInt($(this).val());
-        preferences.port = isNaN(intt) ? 8023 : intt;
+    $("#input_port, #input_host").on("change", function () {
+        switch (this.id) {
+            case "input_port":
+                const intt = parseInt($(this).val());
+                preferences.port = isNaN(intt) ? 8023 : intt;
 
-        if (isNaN(intt)) {
-            $(this).val(8023);
+                if (/\D/.test($(this).val())) {//check for non-integer vals
+                    $(this).val(8023);
+                    ntf('Port must be an integer, assigned to default 8023', 'error');
+                    console.log("Port must be an integer, assigned to default 8023. Delete following if statement " +
+                        "to unforce this: if (/\\D/.test($(this).val())) {//check for non-integer vals");
+                }
+                break;
+            case "input_host"://some IPs may have characters so no need 2 check for it
+                preferences.host = $(this).val();
+                break;
         }
 
         savePreferences();
     });
 
-    $("#input_host").on("change", function () {
-        preferences.host = $(this).val();
-
-        savePreferences();
-    });
 
     $("clear_log").on("click", function () {
         logs = [];
         $("#log_body").empty();
     });
 
-    //End of todo stubs
+    //End of notFinished stubs feature
 
     function generateElementForConfiguration(data, type, device, text) {
         if (type === "bool") {
@@ -625,7 +645,7 @@ $(document).ready(function () {
             const select = document.createElement("select");
             select.classList.add("form-select");
             select.onchange = function () {
-                config[device][text] = select.value === 1 ? true : false;
+                config[device][text] = select.value === 1;
                 send({
                     op: "configuration",
                     device: device,
@@ -650,7 +670,7 @@ $(document).ready(function () {
             span.classList.add("input-group-text");
             span.innerText = text;
 
-            div.appendChild(span);
+            div.appendChild(spntfan);
             div.appendChild(select);
             return div;
         } else if (type === "float") {
@@ -883,7 +903,6 @@ $(document).ready(function () {
         }
     }
 
-    //TODO 29/10/2024  Config page needs to be implemented
     const regenerateConfig = () => {
         const configElement = $("#options");
         configElement.empty();
@@ -967,3 +986,10 @@ $(document).ready(function () {
         sendQueue.push(obj);
     }
 })
+//Old function meant to toggle dev mode with button press
+/*
+document.getElementById('toggle_dev_mode').addEventListener('click', function () {
+    development_mode = !development_mode;
+    console.log('Development mode:', development_mode);
+});
+*/
