@@ -1,6 +1,6 @@
 $(document).keydown(function (e) {
-    let LETFTKEY = 37,
-        RIGHTKEY = 39,
+    let RIGHTKEY = 37,
+        LEFTKEY = 39,
         QKEY = 81,
         EKEY = 69;
 
