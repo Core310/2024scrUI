@@ -1,32 +1,29 @@
 const WebSocket = require('ws');
 const server = new WebSocket.Server({port: 8080});
-
 server.on('connection', (ws) => {
     console.log('Client connected');
 
     const sendData = () => {
-
         let deviceState = JSON.stringify({
             op: 'data',
-            topic: TOPIC_DEVICE_STATE,
+            topic: "/scr/state/system",//TODO NOT WORKING WHEN TRYING TO PORT TO GLOBALS.JS VARIABLES
             timestamp: new Date().toISOString(),
             device: 'autonav',
             state: '0'
         });
 
-        let logging = JSON.stringify({
+        let logging = JSON.stringify({//todo, not sure what to put for example data here
             op: 'data',
-            topic: TOPIC_LOGGING,
+            topic: '/scr/logging',
             timestamp: new Date().toISOString(),
             data: 'data:image/jpeg;base64,',
             node: 'autonav'
         });
-
         let imgData = 'https://www.greenlaundry.net/blog/wp-content/uploads/2011/11/animalsintrees-1.gif';
 
         let conbus = JSON.stringify({
             op: 'data',
-            topic: TOPIC_CONBUS,
+            topic: '/autonav/conbus',
             timestamp: new Date().toISOString(),
             id: 0,
             data: imgData
@@ -34,42 +31,42 @@ server.on('connection', (ws) => {
 
         let combined = JSON.stringify({
             op: 'data',
-            topic: TOPIC_CFG_SPACE_COMBINED_IMAGE,
+            topic: '/autonav/cfg_space/combined/image',
             timestamp: new Date().toISOString(),
             data: 'data:image/jpeg;base64,'
         });
 
         let leftSmall = JSON.stringify({
             op: 'data',
-            topic: TOPIC_CFG_SPACE_RAW_IMAGE_LEFT,
+            topic: '/autonav/cfg_space/raw/image/left_small',
             timestamp: new Date().toISOString(),
             data: imgData
         });
 
         let rightSmall = JSON.stringify({
             op: 'data',
-            topic: TOPIC_CFG_SPACE_RAW_IMAGE_RIGHT,
+            topic: '/autonav/cfg_space/raw/image/right_small',
             timestamp: new Date().toISOString(),
             data: imgData
         });
 
         let compressedRight = JSON.stringify({
             op: 'data',
-            topic: TOPIC_CAMERA_COMPRESSED_RIGHT,
+            topic: '/autonav/camera/compressed/right',
             timestamp: new Date().toISOString(),
             data: imgData
         });
 
         let compressedLeft = JSON.stringify({
             op: 'data',
-            topic: TOPIC_CAMERA_COMPRESSED_LEFT,
+            topic: '/autonav/camera/compressed/left',
             timestamp: new Date().toISOString(),
             data: imgData
         });
 
         let imuData = JSON.stringify({
             op: 'data',
-            topic: TOPIC_IMU,
+            topic: '/autonav/imu',
             timestamp: new Date().toISOString(),
             accel_x: Math.random() * 10,
             accel_y: Math.random() * 10,
@@ -84,7 +81,7 @@ server.on('connection', (ws) => {
 
         let positionData = JSON.stringify({
             op: 'data',
-            topic: TOPIC_POSITION,
+            topic: '/autonav/position',
             timestamp: new Date().toISOString(),
             x: Math.random() * 10,
             y: Math.random() * 10,
@@ -95,7 +92,7 @@ server.on('connection', (ws) => {
 
         let motorFeedbackData = JSON.stringify({
             op: 'data',
-            topic: TOPIC_MOTOR_FEEDBACK,
+            topic: '/autonav/MotorFeedback',
             timestamp: new Date().toISOString(),
             delta_x: Math.random() * 10,
             delta_y: Math.random() * 10,
@@ -103,19 +100,20 @@ server.on('connection', (ws) => {
         });
 
         let gpsData = JSON.stringify({
+            //                    const {latitude, longitude, gps_fix, is_locked, satellites} = msg;
             op: 'data',
-            topic: TOPIC_AUTONAV_GPS,
+            topic: '/autonav/gps',
             timestamp: new Date().toISOString(),
             latitude: Math.random() * 10,
             longitude: Math.random() * 10,
             gps_fix: Math.random() * 10,
             is_locked: true,
-            satellites: Math.random() * 10
+            satellites: Math.random() * 10//todo is this correct?
         });
 
         let sysState = JSON.stringify({
             op: 'data',
-            topic: TOPIC_SYSTEM_STATE,
+            topic: '/scr/state/system',
             timestamp: new Date().toISOString(),
             state: '0',
             mode: 'autonomous',
@@ -124,12 +122,11 @@ server.on('connection', (ws) => {
 
         let motorInput = JSON.stringify({
             op: 'data',
-            topic: TOPIC_MOTOR_INPUT,
+            topic: '/autonav/MotorInput',
             timestamp: new Date().toISOString(),
             forward_velocity: Math.random() * 10,
             angular_velocity: Math.random() * 10
         });
-
         ws.send(deviceState);
         ws.send(logging);
         ws.send(conbus);
