@@ -371,7 +371,7 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
             return;
         }
 
-        if (topic === "/scr/state/system") {
+        if (topic === TOPIC_SYSTEM_STATE) {
             const {state, mode, mobility} = msg;
 
             $("#var_system_state").text(state === 0 ? "Diabled" : state === 1 ? "Autonomous" : state === 2 ? "Manual" : "Shutdown");
@@ -388,7 +388,7 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
             return;
         }
 
-        if (topic === "/scr/state/device") {
+        if (topic === TOPIC_DEVICE_STATE) {
             const {device, state} = msg;
 
             deviceStates[device] = state;
@@ -401,14 +401,14 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
             return;
         }
 
-        if (topic === "/scr/configuration") {
+        if (topic === TOPIC_CONFIGURATION) {
             const {device, json} = msg;
             config[device] = JSON.parse(json);
             regenerateConfig();
             return;
         }
 
-        if (topic === "/scr/logging") {
+        if (topic === TOPIC_LOGGING) {
             logs.push({message: msg.data, node: msg.node, timestamp: new Date()});
             if (logs.length > 30) {
                 logs.shift();
@@ -427,8 +427,7 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
             }
             return;
         }
-
-        if (topic === "/autonav/gps") {
+        if (topic === TOPIC_AUTONAV_GPS) {
             const {latitude, longitude, gps_fix, is_locked, satellites} = msg;
             $("#var_gps_position").text(formatLatLong(latitude, longitude, true));
             $("#var_gps_fix").text(gps_fix);
@@ -437,58 +436,58 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
             return;
         }
 
-        if (topic === "/autonav/MotorFeedback") {
+        if (topic === TOPIC_MOTOR_FEEDBACK) {
             const {delta_x, delta_y, delta_theta} = msg;
             $("#var_motors_feedback").text(`(${formatToFixed(delta_x, 4)}, ${formatToFixed(delta_y, 4)}, ${formatToFixed(delta_theta, 4)}°)`);
             return;
         }
 
-        if (topic === "/autonav/MotorInput") {
+        if (topic === TOPIC_MOTOR_INPUT) {
             const {forward_velocity, angular_velocity} = msg;
             $("#var_motors_velocity").text(`(${formatToFixed(forward_velocity, 3)}, ${formatToFixed(angular_velocity, 3)})`);
             return;
         }
 
-        if (topic === "/autonav/position") {
+        if (topic === TOPIC_POSITION) {
             const {x, y, theta, latitude, longitude} = msg;
             $("#var_position_origin").text(`(${formatToFixed(x, 4)}, ${formatToFixed(y, 4)}, ${radiansToDegrees(parseFloat(theta)).toFixed(3)}°)`);
             $("#var_position_global").text(`(${formatToFixed(latitude, 8)}, ${formatToFixed(longitude, 8)})`);
             return;
         }
 
-        if (topic === "/autonav/camera/compressed/left") {
+        if (topic === TOPIC_CAMERA_COMPRESSED_LEFT) {
             transferImageToElement("target_raw_camera_left", msg.data);
             return;
         }
 
-        if (topic === "/autonav/camera/compressed/right") {
+        if (topic === TOPIC_CAMERA_COMPRESSED_RIGHT) {
             transferImageToElement("target_raw_camera_right", msg.data);
             return;
         }
 
-        if (topic === "/autonav/cfg_space/raw/image/left_small") {
+        if (topic === TOPIC_CFG_SPACE_RAW_IMAGE_LEFT) {
             transferImageToElement("target_filtered_left", msg.data);
             return;
         }
 
-        if (topic === "/autonav/cfg_space/raw/image/right_small") {
+        if (topic === TOPIC_CFG_SPACE_RAW_IMAGE_RIGHT) {
             transferImageToElement("target_filtered_right", msg.data);
             return;
         }
 
-        if (topic === "/autonav/cfg_space/combined/image") {
+        if (topic === TOPIC_CFG_SPACE_COMBINED_IMAGE) {
             transferImageToElement("target_combined", msg.data);
             return;
         }
 
-        if (topic === "/autonav/imu") {
+        if (topic === TOPIC_IMU) {
             const {accel_x, accel_y, accel_z, angular_x, angular_y, angular_z, yaw, pitch, roll} = msg;
             $("#var_imu_acceleration").text(`(${formatToFixed(accel_x, 4)}, ${formatToFixed(accel_y, 4)}, ${formatToFixed(accel_z, 4)})`);
             $("#var_imu_angular").text(`(${formatToFixed(angular_x, 4)}, ${formatToFixed(angular_y, 4)}, ${formatToFixed(angular_z, 4)})`);
             $("#var_imu_orientation").text(`(${radiansToDegrees(parseFloat(yaw)).toFixed(3)}°, ${radiansToDegrees(parseFloat(pitch)).toFixed(3)}°, ${radiansToDegrees(parseFloat(roll)).toFixed(3)}°)`);
         }
 
-        if (topic === "/autonav/conbus") {
+        if (topic === TOPIC_CONBUS) {
             const {id, data} = msg;
             let response;
             if (id >= 1100 && id < 1200) {
