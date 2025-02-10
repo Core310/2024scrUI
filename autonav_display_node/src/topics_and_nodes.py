@@ -1,0 +1,27 @@
+from enum import Enum
+
+
+class Topics(Enum):
+    CAMERA_COMPRESSED_LEFT = "/autonav/camera/compressed/left"
+    CAMERA_COMPRESSED_RIGHT = "/autonav/camera/compressed/right"
+    CFG_SPACE_RAW_IMAGE_LEFT_SMALL = "/autonav/cfg_space/raw/image/left_small"
+    CFG_SPACE_RAW_IMAGE_RIGHT_SMALL = "/autonav/cfg_space/raw/image/right_small"
+    CFG_SPACE_COMBINED_IMAGE = "/autonav/cfg_space/combined/image"
+    SYSTEM_STATE = "/scr/system_state"
+    UPDATE_CONFIG_CLIENT = "/scr/update_config_client"
+    GET_PRESETS = "/scr/get_presets"
+    SET_ACTIVE_PRESET = "/scr/set_active_preset"
+    SAVE_ACTIVE_PRESET = "/scr/save_active_preset"
+    DELETE_PRESET = "/scr/delete_preset"
+    BROADCAST = "/scr/state/broadcast"
+    DEVICE_STATE = "/scr/device_state"
+    CONFIG_UPDATED = "/scr/config_updated"
+    POSITION = "/autonav/position"
+    MOTOR_FEEDBACK = "/autonav/MotorFeedback"
+    MOTOR_INPUT = "/autonav/MotorInput"
+    MOTOR_CONTROLLER_DEBUG = "/autonav/MotorControllerDebug"
+    GPS_FEEDBACK = "/autonav/gps"
+    IMU_DATA = "/autonav/imu"
+    CAMERA_LEFT = "/autonav/camera/compressed/left/cutout"
+    CAMERA_RIGHT = "/autonav/camera/compressed/right/cutout"
+    INFLATED_DEBUG = "/autonav/cfg_space/raw/debug"

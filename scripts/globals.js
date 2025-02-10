@@ -256,3 +256,19 @@ const conbusDevices = {
         }
     }
 };
+
+const TOPIC_SYSTEM_STATE = "/scr/state/system";
+const TOPIC_DEVICE_STATE = "/scr/state/device";
+const TOPIC_CONFIGURATION = "/scr/configuration";
+const TOPIC_LOGGING = "/scr/logging";
+const TOPIC_AUTONAV_GPS = "/autonav/gps";
+const TOPIC_MOTOR_FEEDBACK = "/autonav/MotorFeedback";
+const TOPIC_MOTOR_INPUT = "/autonav/MotorInput";
+const TOPIC_POSITION = "/autonav/position";
+const TOPIC_CAMERA_COMPRESSED_LEFT = "/autonav/camera/compressed/left";
+const TOPIC_CAMERA_COMPRESSED_RIGHT = "/autonav/camera/compressed/right";
+const TOPIC_CFG_SPACE_RAW_IMAGE_LEFT = "/autonav/cfg_space/raw/image/left_small";
+const TOPIC_CFG_SPACE_RAW_IMAGE_RIGHT = "/autonav/cfg_space/raw/image/right_small";
+const TOPIC_CFG_SPACE_COMBINED_IMAGE = "/autonav/cfg_space/combined/image";
+const TOPIC_IMU = "/autonav/imu";
+const TOPIC_CONBUS = "/autonav/conbus";

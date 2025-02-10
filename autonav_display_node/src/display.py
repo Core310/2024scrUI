@@ -32,6 +32,8 @@ from scr_msgs.srv import (
 from sensor_msgs.msg import CompressedImage
 from std_msgs.msg import Empty
 
+from autonav_display_node.src.namedEnumNodes import Topics
+
 async_loop = asyncio.new_event_loop()
 bridge = cv_bridge.CvBridge()
 
@@ -74,102 +76,102 @@ class BroadcastNode(Node):
 
         # Limiter
         self.limiter = Limiter()
-        self.limiter.setLimit("/autonav/MotorInput", 2)
-        self.limiter.setLimit("/autonav/MotorFeedback", 5)
-        self.limiter.setLimit("/autonav/MotorControllerDebug", 1)
-        self.limiter.setLimit("/autonav/imu", 1)
-        self.limiter.setLimit("/autonav/gps", 3)
-        self.limiter.setLimit("/autonav/position", 3)
-        self.limiter.setLimit("/autonav/camera/compressed/left", 0.5)
-        self.limiter.setLimit("/autonav/camera/compressed/right", 0.5)
-        self.limiter.setLimit("/autonav/cfg_space/raw/image/left_small", 0.5)
-        self.limiter.setLimit("/autonav/cfg_space/raw/image/right_small", 0.5)
-        self.limiter.setLimit("/autonav/cfg_space/combined/image", 0.5)
+        self.limiter.setLimit(Topics.MOTOR_INPUT.value, 2)
+        self.limiter.setLimit(Topics.MOTOR_FEEDBACK.value, 5)
+        self.limiter.setLimit(Topics.MOTOR_CONTROLLER_DEBUG.value, 1)
+        self.limiter.setLimit(Topics.IMU_DATA.value, 1)
+        self.limiter.setLimit(Topics.GPS_FEEDBACK.value, 3)
+        self.limiter.setLimit(Topics.POSITION.value, 3)
+        self.limiter.setLimit(Topics.CAMERA_COMPRESSED_LEFT.value, 0.5)
+        self.limiter.setLimit(Topics.CAMERA_COMPRESSED_RIGHT.value, 0.5)
+        self.limiter.setLimit(Topics.CFG_SPACE_RAW_IMAGE_LEFT_SMALL.value, 0.5)
+        self.limiter.setLimit(Topics.CFG_SPACE_RAW_IMAGE_RIGHT_SMALL.value, 0.5)
+        self.limiter.setLimit(Topics.CFG_SPACE_COMBINED_IMAGE.value, 0.5)
 
         # Clients
         self.system_state_c = self.create_subscription(
-            SystemState, "/scr/system_state", self.systemStateCallback, 20
+            SystemState, Topics.SYSTEM_STATE.value, self.systemStateCallback, 20
         )
         self.system_state_c = self.create_client(
-            SetSystemState, "/scr/state/set_system_state"
+            SetSystemState, Topics.SYSTEM_STATE.value
         )
-        self.config_c = self.create_client(UpdateConfig, "/scr/update_config_client")
-        self.get_presets_c = self.create_client(GetPresets, "/scr/get_presets")
+        self.config_c = self.create_client(UpdateConfig, Topics.UPDATE_CONFIG_CLIENT.value)
+        self.get_presets_c = self.create_client(GetPresets, Topics.GET_PRESETS.value)
         self.set_active_preset_c = self.create_client(
-            SetActivePreset, "/scr/set_active_preset"
+            SetActivePreset, Topics.SET_ACTIVE_PRESET.value
         )
         self.save_active_preset_c = self.create_client(
-            SaveActivePreset, "/scr/save_active_preset"
+            SaveActivePreset, Topics.SAVE_ACTIVE_PRESET.value
         )
-        self.delete_preset_c = self.create_client(DeletePreset, "/scr/delete_preset")
+        self.delete_preset_c = self.create_client(DeletePreset, Topics.DELETE_PRESET.value)
 
         # Publishers
-        self.broadcast_p = self.create_publisher(Empty, "/scr/state/broadcast", 20)
+        self.broadcast_p = self.create_publisher(Empty, Topics.BROADCAST.value, 20)
 
         # Subscriptions
         self.device_state_s = self.create_subscription(
-            DeviceState, "/scr/device_state", self.deviceStateCallback, 20
+            DeviceState, Topics.DEVICE_STATE.value, self.deviceStateCallback, 20
         )
         self.config_s = self.create_subscription(
             ConfigUpdated,
-            "/scr/config_updated",
+            Topics.CONFIG_UPDATED.value,
             self.configurationInstructionCallback,
             10,
         )
         self.position_s = self.create_subscription(
-            Position, "/autonav/position", self.positionCallback, 20
+            Position, Topics.POSITION.value, self.positionCallback, 20
         )
         self.motor_feedback_s = self.create_subscription(
-            MotorFeedback, "/autonav/MotorFeedback", self.motorFeedbackCallback, 20
+            MotorFeedback, Topics.MOTOR_FEEDBACK.value, self.motorFeedbackCallback, 20
         )
         self.motor_input_s = self.create_subscription(
-            MotorInput, "/autonav/MotorInput", self.motorInputCallback, 20
+            MotorInput, Topics.MOTOR_INPUT.value, self.motorInputCallback, 20
         )
         self.motor_debug_s = self.create_subscription(
             MotorControllerDebug,
-            "/autonav/MotorControllerDebug",
+            Topics.MOTOR_CONTROLLER_DEBUG.value,
             self.motorControllerDebugCallback,
             20,
         )
         self.gps_s = self.create_subscription(
-            GPSFeedback, "/autonav/gps", self.gpsFeedbackCallback, 20
+            GPSFeedback, Topics.GPS_FEEDBACK.value, self.gpsFeedbackCallback, 20
         )
         self.imu_s = self.create_subscription(
-            IMUData, "/autonav/imu", self.imuDataCallback, 20
+            IMUData, Topics.IMU_DATA.value, self.imuDataCallback, 20
         )
         self.camera_left_s = self.create_subscription(
             CompressedImage,
-            "/autonav/camera/compressed/left/cutout",
+            Topics.CAMERA_LEFT.value,
             self.cameraCallbackLeft,
             self.qos_profile,
         )
         self.camera_right_s = self.create_subscription(
             CompressedImage,
-            "/autonav/camera/compressed/right/cutout",
+            Topics.CAMERA_RIGHT.value,
             self.cameraCallbackRight,
             self.qos_profile,
         )
         self.filtered_left_s = self.create_subscription(
             CompressedImage,
-            "/autonav/cfg_space/raw/image/left_small",
+            Topics.CFG_SPACE_RAW_IMAGE_LEFT_SMALL.value,
             self.filteredCallbackLeftSmall,
             self.qos_profile,
         )
         self.filtered_right_s = self.create_subscription(
             CompressedImage,
-            "/autonav/cfg_space/raw/image/right_small",
+            Topics.CFG_SPACE_RAW_IMAGE_RIGHT_SMALL.value,
             self.filteredCallbackRightSmall,
             self.qos_profile,
         )
         self.combined_s = self.create_subscription(
             CompressedImage,
-            "/autonav/cfg_space/combined/image",
+            Topics.CFG_SPACE_COMBINED_IMAGE.value,
             self.filteredCallbackCombined,
             self.qos_profile,
         )
         self.inflated_s = self.create_subscription(
             CompressedImage,
-            "/autonav/cfg_space/raw/debug",
+            Topics.INFLATED_DEBUG.value,
             self.inflated_callback,
             self.qos_profile,
         )
@@ -423,7 +425,8 @@ class BroadcastNode(Node):
     def inflated_callback(self, msg: CompressedImage):
         self.push_image("/autonav/cfg_space/raw/debug", msg)
 
-    def pathingDebugCallback(self, msg: PathingDebug):  # //feature 21/11/2024 Unused? Can reImplement pathing stuff again?
+    def pathingDebugCallback(self,
+                             msg: PathingDebug):  # //feature 21/11/2024 Unused? Can reImplement pathing stuff again?
         self.push_old(
             json.dumps(
                 {
