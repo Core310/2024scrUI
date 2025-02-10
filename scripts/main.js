@@ -1,11 +1,3 @@
-// DOM elesmens :)
-const dataChannelLog = document.getElementById('data-channel'),
-    iceConnectionLog = document.getElementById('ice-connection-state'),
-    iceGatheringLog = document.getElementById('ice-gathering-state'),
-    signalingLog = document.getElementById('signaling-state');
-//////////////////////////////////rtc Implementation^^^^ //////////////////////////////////
-
-
 document.addEventListener("DOMContentLoaded", function () {    // Check if local storage has preferences
     if (localStorage.getItem("preferences") == null) {
         savePreferences();
@@ -17,16 +9,6 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
 
         $("html").attr("data-bs-theme", preferences.theme);
     }
-
-
-// peer connection
-    let pc = null;
-
-// data channelf
-    let dc = null, dcInterval = null;
-
-
-    ////////////////////////////////// Websocekt ////////////////////////////////// todo! (was rolleddback idk whr it went :(
 
     let websocket;
     if (websocket)
@@ -371,181 +353,136 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
             return;
         }
 
-        if (topic === TOPIC_SYSTEM_STATE) {
-            const {state, mode, mobility} = msg;
+        switch (topic) {
+            case TOPIC_SYSTEM_STATE: {
+                const {state, mode, mobility} = msg;
 
-            $("#var_system_state").text(state === 0 ? "Diabled" : state === 1 ? "Autonomous" : state === 2 ? "Manual" : "Shutdown");
-            $("#var_system_mode").text(mode === 0 ? "Competition" : mode === 1 ? "Simulation" : "Practice");
-            $("#var_system_mobility").text(mobility ? "Enabled" : "Disabled");
+                $("#var_system_state").text(
+                    state === 0 ? "Disabled" : state === 1 ? "Autonomous" : state === 2 ? "Manual" : "Shutdown"
+                );
+                $("#var_system_mode").text(
+                    mode === 0 ? "Competition" : mode === 1 ? "Simulation" : "Practice"
+                );
+                $("#var_system_mobility").text(mobility ? "Enabled" : "Disabled");
 
-            systemState.state = state;
-            systemState.mode = mode;
-            systemState.mobility = mobility;
+                systemState.state = state;
+                systemState.mode = mode;
+                systemState.mobility = mobility;
 
-            $("#input_system_state").val(state);
-            $("#input_system_mode").val(mode);
-            $("#input_system_mobility").prop("checked", mobility);
-            return;
-        }
-
-        if (topic === TOPIC_DEVICE_STATE) {
-            const {device, state} = msg;
-
-            deviceStates[device] = state;
-            unorderedListElement = $("#element_device_states");
-            unorderedListElement.empty();
-            for (const id in deviceStates) {
-                const state = deviceStates[id];
-                unorderedListElement.append(`<h5>${id}: <span data-state=\"${state}\">${deviceStateToName(state)}</span></h5>`);
+                $("#input_system_state").val(state);
+                $("#input_system_mode").val(mode);
+                $("#input_system_mobility").prop("checked", mobility);
+                break;
             }
-            return;
-        }
-
-        if (topic === TOPIC_CONFIGURATION) {
-            const {device, json} = msg;
-            config[device] = JSON.parse(json);
-            regenerateConfig();
-            return;
-        }
-
-        if (topic === TOPIC_LOGGING) {
-            logs.push({message: msg.data, node: msg.node, timestamp: new Date()});
-            if (logs.length > 30) {
-                logs.shift();
-            }
-
-            const logElement = $("#log_body");
-            logElement.empty();
-            for (let i = logs.length - 1; i >= 0; i--) {
-                const log = logs[i];
-                const tableEntry = $(`<tr></tr>`);
-                // Format as: HH:MM:SS
-                tableEntry.append(`<td>${log.timestamp.toTimeString().split(" ")[0]}</td>`);
-                tableEntry.append(`<td>${log.node}</td>`);
-                tableEntry.append(`<td>${log.message}</td>`);
-                logElement.append(tableEntry);
-            }
-            return;
-        }
-
-        if (topic === TOPIC_AUTONAV_GPS) {
-            const {latitude, longitude, gps_fix, is_locked, satellites} = msg;
-            $("#var_gps_position").text(formatLatLong(latitude, longitude, true));
-            $("#var_gps_fix").text(gps_fix);
-            $("#var_gps_fixed").text(is_locked ? "Locked" : "Not Locked");
-            $("#var_gps_satellites").text(satellites);
-            return;
-        }
-
-        if (topic === TOPIC_MOTOR_FEEDBACK) {
-            const {delta_x, delta_y, delta_theta} = msg;
-            $("#var_motors_feedback").text(`(${formatToFixed(delta_x, 4)}, ${formatToFixed(delta_y, 4)}, ${formatToFixed(delta_theta, 4)}°)`);
-            return;
-        }
-
-        if (topic === TOPIC_MOTOR_INPUT) {
-            const {forward_velocity, angular_velocity} = msg;
-            $("#var_motors_velocity").text(`(${formatToFixed(forward_velocity, 3)}, ${formatToFixed(angular_velocity, 3)})`);
-            return;
-        }
-
-        if (topic === TOPIC_POSITION) {
-            const {x, y, theta, latitude, longitude} = msg;
-            $("#var_position_origin").text(`(${formatToFixed(x, 4)}, ${formatToFixed(y, 4)}, ${radiansToDegrees(parseFloat(theta)).toFixed(3)}°)`);
-            $("#var_position_global").text(`(${formatToFixed(latitude, 8)}, ${formatToFixed(longitude, 8)})`);
-            return;
-        }
-
-        if (topic === TOPIC_CAMERA_COMPRESSED_LEFT) {
-            transferImageToElement("target_raw_camera_left", msg.data);
-            return;
-        }
-
-        if (topic === TOPIC_CAMERA_COMPRESSED_RIGHT) {
-            transferImageToElement("target_raw_camera_right", msg.data);
-            return;
-        }
-
-        if (topic === TOPIC_CFG_SPACE_RAW_IMAGE_LEFT) {
-            transferImageToElement("target_filtered_left", msg.data);
-            return;
-        }
-
-        if (topic === TOPIC_CFG_SPACE_RAW_IMAGE_RIGHT) {
-            transferImageToElement("target_filtered_right", msg.data);
-            return;
-        }
-
-        if (topic === TOPIC_CFG_SPACE_COMBINED_IMAGE) {
-            transferImageToElement("target_combined", msg.data);
-            return;
-        }
-
-        if (topic === TOPIC_IMU) {
-            const {accel_x, accel_y, accel_z, angular_x, angular_y, angular_z, yaw, pitch, roll} = msg;
-            $("#var_imu_acceleration").text(`(${formatToFixed(accel_x, 4)}, ${formatToFixed(accel_y, 4)}, ${formatToFixed(accel_z, 4)})`);
-            $("#var_imu_angular").text(`(${formatToFixed(angular_x, 4)}, ${formatToFixed(angular_y, 4)}, ${formatToFixed(angular_z, 4)})`);
-            $("#var_imu_orientation").text(`(${radiansToDegrees(parseFloat(yaw)).toFixed(3)}°, ${radiansToDegrees(parseFloat(pitch)).toFixed(3)}°, ${radiansToDegrees(parseFloat(roll)).toFixed(3)}°)`);
-        }
-
-        if (topic === TOPIC_CONBUS) {
-            const {id, data} = msg;
-            let response;
-            if (id >= 1100 && id < 1200) {
-                response = createConbusReadResponse(id, data);
-                if (!(response.id in conbusDevices)) {
-                    return;
+            case TOPIC_DEVICE_STATE: {
+                const {device, state} = msg;
+                deviceStates[device] = state;
+                unorderedListElement = $("#element_device_states");
+                unorderedListElement.empty();
+                for (const id in deviceStates) {
+                    const state = deviceStates[id];
+                    unorderedListElement.append(
+                        `<h5>${id}: <span data-state="${state}">${deviceStateToName(state)}</span></h5>`
+                    );
                 }
-            } else if (id >= 1300 && id < 1400) {
-                response = createConbusWriteResponse(id, data);
-                if (!(response.id in conbusDevices)) {
-                    return;
+                break;
+            }
+            case TOPIC_CONFIGURATION: {
+                const {device, json} = msg;
+                config[device] = JSON.parse(json);
+                regenerateConfig();
+                break;
+            }
+            case TOPIC_LOGGING: {
+                logs.push({message: msg.data, node: msg.node, timestamp: new Date()});
+                if (logs.length > 30) logs.shift();
+
+                const logElement = $("#log_body");
+                logElement.empty();
+                for (let i = logs.length - 1; i >= 0; i--) {
+                    const log = logs[i];
+                    const tableEntry = $("<tr></tr>");
+                    tableEntry.append(`<td>${log.timestamp.toTimeString().split(" ")[0]}</td>`);
+                    tableEntry.append(`<td>${log.node}</td>`);
+                    tableEntry.append(`<td>${log.message}</td>`);
+                    logElement.append(tableEntry);
                 }
-            } else {
-                return;
+                break;
             }
-
-            if (!(response.id in conbus)) {
-                conbus[response.id] = {};
+            case TOPIC_AUTONAV_GPS: {
+                const {latitude, longitude, gps_fix, is_locked, satellites} = msg;
+                $("#var_gps_position").text(formatLatLong(latitude, longitude, true));
+                $("#var_gps_fix").text(gps_fix);
+                $("#var_gps_fixed").text(is_locked ? "Locked" : "Not Locked");
+                $("#var_gps_satellites").text(satellites);
+                break;
             }
-            conbus[response.id][response.address] = response.data;
-
-            const conbusElement = $(`#conbus`);
-            const conbusCard = $(`#conbus_${response.id}`);
-            if (conbusCard !== undefined || conbusCard.length !== 0) {
-                conbusCard.remove();
+            case TOPIC_MOTOR_FEEDBACK: {
+                const {delta_x, delta_y, delta_theta} = msg;
+                $("#var_motors_feedback").text(
+                    `(${formatToFixed(delta_x, 4)}, ${formatToFixed(delta_y, 4)}, ${formatToFixed(delta_theta, 4)}°)`
+                );
+                break;
             }
-
-            const card = $(`<div class="card" id="conbus_${response.id}" style="margin-bottom: 10px;"></div>`);
-            card.append(`<div class="card-header"><h5>${conbusDevices[response.id].title}</h5></div>`);
-            const cardBody = $(`<div class="card-body"></div>`);
-            card.append(cardBody);
-
-            for (const address in conbus[response.id]) {
-                const data = conbus[response.id][address];
-                if (!(address in conbusDevices[response.id].registers)) {
-                    const title = conbusDevices[response.id]?.registers?.[address]?.title ?? address.toString();
-                    const alert = $(`<div class="alert alert-danger" role="alert">Unknown Address: ${title}</div>`);
-                    cardBody.append(alert);
-                    continue;
-                }
-                const type = conbusDevices[response.id].registers[address].type;
-                const title = conbusDevices[response.id].registers[address].title;
-                const readonly = conbusDevices[response.id].registers[address].readonly || false;
-                const inputElement = generateElementForConbus(data, type, title, response.id, address, readonly);
-                cardBody.append(inputElement);
+            case TOPIC_MOTOR_INPUT: {
+                const {forward_velocity, angular_velocity} = msg;
+                $("#var_motors_velocity").text(
+                    `(${formatToFixed(forward_velocity, 3)}, ${formatToFixed(angular_velocity, 3)})`
+                );
+                break;
             }
-
-            for (const address in conbusDevices[response.id].registers) {
-                if (!(address in conbus[response.id])) {
-                    const title = conbusDevices[response.id].registers[address].title;
-                    const alert = $(`<div class="alert alert-warning" role="alert">Missing Address: ${title}</div>`);
-                    cardBody.append(alert);
-                }
+            case TOPIC_POSITION: {
+                const {x, y, theta, latitude, longitude} = msg;
+                $("#var_position_origin").text(
+                    `(${formatToFixed(x, 4)}, ${formatToFixed(y, 4)}, ${radiansToDegrees(parseFloat(theta)).toFixed(3)}°)`
+                );
+                $("#var_position_global").text(
+                    `(${formatToFixed(latitude, 8)}, ${formatToFixed(longitude, 8)})`
+                );
+                break;
             }
+            case TOPIC_CAMERA_COMPRESSED_LEFT:
+                transferImageToElement("target_raw_camera_left", msg.data);
+                break;
+            case TOPIC_CAMERA_COMPRESSED_RIGHT:
+                transferImageToElement("target_raw_camera_right", msg.data);
+                break;
+            case TOPIC_CFG_SPACE_RAW_IMAGE_LEFT:
+                transferImageToElement("target_filtered_left", msg.data);
+                break;
+            case TOPIC_CFG_SPACE_RAW_IMAGE_RIGHT:
+                transferImageToElement("target_filtered_right", msg.data);
+                break;
+            case TOPIC_CFG_SPACE_COMBINED_IMAGE:
+                transferImageToElement("target_combined", msg.data);
+                break;
+            case TOPIC_IMU: {
+                const {accel_x, accel_y, accel_z, angular_x, angular_y, angular_z, yaw, pitch, roll} = msg;
+                $("#var_imu_acceleration").text(
+                    `(${formatToFixed(accel_x, 4)}, ${formatToFixed(accel_y, 4)}, ${formatToFixed(accel_z, 4)})`
+                );
+                $("#var_imu_angular").text(
+                    `(${formatToFixed(angular_x, 4)}, ${formatToFixed(angular_y, 4)}, ${formatToFixed(angular_z, 4)})`
+                );
+                $("#var_imu_orientation").text(
+                    `(${radiansToDegrees(parseFloat(yaw)).toFixed(3)}°, ${radiansToDegrees(parseFloat(pitch)).toFixed(3)}°, ${radiansToDegrees(parseFloat(roll)).toFixed(3)}°)`
+                );
+                break;
+            }
+            case TOPIC_CONBUS: {
+                const {id, data} = msg;
+                let response = id >= 1100 && id < 1200 ? createConbusReadResponse(id, data) :
+                    id >= 1300 && id < 1400 ? createConbusWriteResponse(id, data) : null;
+                if (!response || !(response.id in conbusDevices)) break;
 
-            conbusElement.append(card);
+                if (!(response.id in conbus)) conbus[response.id] = {};
+                conbus[response.id][response.address] = response.data;
 
+                updateConbusUI(response);
+                break;
+            }
+            default:
+                break;
         }
     }
 
