@@ -427,6 +427,7 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
             }
             return;
         }
+
         if (topic === TOPIC_AUTONAV_GPS) {
             const {latitude, longitude, gps_fix, is_locked, satellites} = msg;
             $("#var_gps_position").text(formatLatLong(latitude, longitude, true));
