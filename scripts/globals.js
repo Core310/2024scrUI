@@ -276,22 +276,15 @@ const TOPIC_SAFETY_LIGHTS = '/autonav/safety_lights';
 const TOPIC_PERFORMANCE = 'autonav/performance';
 
 // Raw camera
-const TOPIC_CFG_SPACE_RAW_IMAGE_LEFT = "";//TODO reafctor to new (below 2)
-const TOPIC_CFG_SPACE_RAW_IMAGE_RIGHT = "";//TODO
-
 const TOPIC_RAW_LEFT = 'autonav/camera/left';// TODO NEW NODES, IMPLEMENT
 const TOPIC_RAW_RIGHT = 'autonav/camera/right';// TODO NEW NODES, IMPLEMENT
 const TOPIC_RAW_FRONT = 'autonav/camera/front';// TODO NEW NODES, IMPLEMENT
 const TOPIC_RAW_BACK = 'autonav/camera/back';// TODO NEW NODES, IMPLEMENT
 
 //Other Camera Nodes
-const TOPIC_CFG_SPACE_COMBINED_IMAGE = '/autonav/vision/combined/filtered'
-const TOPIC_FEELERS = '/autonav/feelers/debug';// todo does this transmit an image?
+const TOPIC_COMBINED_IMAGE = '/autonav/vision/combined/filtered'
+const TOPIC_FEELERS = '/autonav/feelers/debug';// todo does this transmit an image? (assuming it does for now
 
 // Others
 const TOPIC_CONFIGURATION = "/scr/configuration";// TODO IS THIS STILL A TOPIC?
-const TOPIC_LOGGING = "autonav/autonav_playback"; //TODO feed in new data and test if  this actually gets data in
-
-
-const TOPIC_CAMERA_COMPRESSED_LEFT = "/autonav/camera/compressed/left";
-const TOPIC_CAMERA_COMPRESSED_RIGHT = "/autonav/camera/compressed/right";
+const TOPIC_PLAYBACK = "autonav/autonav_playback"; //TODO feed in new data and test if  this actually gets data in

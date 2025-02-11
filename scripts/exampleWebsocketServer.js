@@ -1,5 +1,3 @@
-// noinspection DuplicatedCode
-
 const WebSocket = require('ws');
 const server = new WebSocket.Server({port: 8080});
 server.on('connection', (ws) => {
@@ -16,7 +14,7 @@ server.on('connection', (ws) => {
 
         let logging = JSON.stringify({
             op: 'data',
-            topic: TOPIC_LOGGING, // Replaced with constant
+            topic: TOPIC_PLAYBACK, // Replaced with constant
             timestamp: new Date().toISOString(),
             data: 'data:image/jpeg;base64,',
             node: 'autonav'
@@ -34,38 +32,51 @@ server.on('connection', (ws) => {
 
         let combined = JSON.stringify({
             op: 'data',
-            topic: TOPIC_CFG_SPACE_COMBINED_IMAGE, // Replaced with constant
+            topic: TOPIC_COMBINED_IMAGE, // Replaced with constant
             timestamp: new Date().toISOString(),
-            data: 'data:image/jpeg;base64,'
+            data: imgData
         });
 
         let leftSmall = JSON.stringify({
             op: 'data',
-            topic: TOPIC_CFG_SPACE_RAW_IMAGE_LEFT, // Replaced with constant
+            topic: TOPIC_RAW_LEFT, // Replaced with constant
             timestamp: new Date().toISOString(),
             data: imgData
         });
 
         let rightSmall = JSON.stringify({
             op: 'data',
-            topic: TOPIC_CFG_SPACE_RAW_IMAGE_RIGHT, // Replaced with constant
+            topic: TOPIC_RAW_RIGHT, // Replaced with constant
             timestamp: new Date().toISOString(),
             data: imgData
         });
 
-        let compressedRight = JSON.stringify({
+        let front = JSON.stringify({
             op: 'data',
-            topic: TOPIC_CAMERA_COMPRESSED_RIGHT, // Replaced with constant
+            topic: TOPIC_RAW_FRONT, // Replaced with constant
             timestamp: new Date().toISOString(),
             data: imgData
         });
 
-        let compressedLeft = JSON.stringify({
+        let back = JSON.stringify({
             op: 'data',
-            topic: TOPIC_CAMERA_COMPRESSED_LEFT, // Replaced with constant
+            topic: TOPIC_RAW_BACK, // Replaced with constant
             timestamp: new Date().toISOString(),
             data: imgData
         });
+        /*        let compressedRight = JSON.stringify({
+                    op: 'data',
+                    topic: TOPIC_RAW_RIGHT, // Replaced with constant
+                    timestamp: new Date().toISOString(),
+                    data: imgData
+                });
+
+                let compressedLeft = JSON.stringify({
+                    op: 'data',
+                    topic: TOPIC_RAW_LEFT, // Replaced with constant
+                    timestamp: new Date().toISOString(),
+                    data: imgData
+                });*/
 
         let imuData = JSON.stringify({
             op: 'data',
@@ -136,8 +147,12 @@ server.on('connection', (ws) => {
             ws.send(combined);
             ws.send(leftSmall);
             ws.send(rightSmall);
-            ws.send(compressedRight);
-            ws.send(compressedLeft);
+            /* deprecated
+                        ws.send(compressedRight);
+                        ws.send(compressedLeft);
+            */
+            ws.send(front);
+            ws.send(back);
         }, 500);
         ws.send(imuData);
         ws.send(positionData);
@@ -164,7 +179,7 @@ server.on('connection', (ws) => {
 console.log('WebSocket server is running on ws://localhost:8080');
 
 
-/*Topics can't be used from globals.js since they don't render client side*/
+/*Topics can't be used from globals.js since they don't render client side so I'm just copy/pasting whatever's in globals.js*/
 // Topic Listeneres
 const TOPIC_SYSTEM_STATE = "autonav/shared/system";
 const TOPIC_DEVICE_STATE = "autonav/shared/device";
@@ -182,23 +197,15 @@ const TOPIC_CONBUS = "/autonav/conbus";
 const TOPIC_SAFETY_LIGHTS = '/autonav/safety_lights';
 const TOPIC_PERFORMANCE = 'autonav/performance';
 
-// Raw camera
-const TOPIC_CFG_SPACE_RAW_IMAGE_LEFT = "";//TODO reafctor to new (below 2)
-const TOPIC_CFG_SPACE_RAW_IMAGE_RIGHT = "";//TODO
-
 const TOPIC_RAW_LEFT = 'autonav/camera/left';// TODO NEW NODES, IMPLEMENT
 const TOPIC_RAW_RIGHT = 'autonav/camera/right';// TODO NEW NODES, IMPLEMENT
 const TOPIC_RAW_FRONT = 'autonav/camera/front';// TODO NEW NODES, IMPLEMENT
 const TOPIC_RAW_BACK = 'autonav/camera/back';// TODO NEW NODES, IMPLEMENT
 
 //Other Camera Nodes
-const TOPIC_CFG_SPACE_COMBINED_IMAGE = '/autonav/vision/combined/filtered'
-const TOPIC_FEELERS = '/autonav/feelers/debug';// todo does this transmit an image?
+const TOPIC_COMBINED_IMAGE = '/autonav/vision/combined/filtered'
+const TOPIC_FEELERS = '/autonav/feelers/debug';// todo does this transmit an image? (assuming it does for now
 
 // Others
 const TOPIC_CONFIGURATION = "/scr/configuration";// TODO IS THIS STILL A TOPIC?
-const TOPIC_LOGGING = "autonav/autonav_playback"; //TODO feed in new data and test if  this actually gets data in
-
-
-const TOPIC_CAMERA_COMPRESSED_LEFT = "/autonav/camera/compressed/left";
-const TOPIC_CAMERA_COMPRESSED_RIGHT = "/autonav/camera/compressed/right";
+const TOPIC_PLAYBACK = "autonav/autonav_playback"; //TODO feed in new data and test if  this actually gets data in

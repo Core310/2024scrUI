@@ -177,6 +177,8 @@ span[data-state="5"] {
     justify-content: center;
     align-items: center;
     gap: 1rem;
+    width: auto;
+    height: auto;
 
 
 }
@@ -214,7 +216,7 @@ img[data-type="small"] {
     flex-direction: row;
     flex-wrap: wrap;
     width: fit-content;
-    height: min-content;
+    height: fit-content;
 }
 
 #dashboard {
@@ -225,11 +227,8 @@ img[data-type="small"] {
 
 #vtest {
     min-width: 1000px;
-
 }
 
 #active_preset_value {
     color: #ff7bff;
 }
-
-
