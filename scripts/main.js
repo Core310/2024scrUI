@@ -816,7 +816,6 @@ document.addEventListener("DOMContentLoaded", function () {    // Check if local
             return div;
         } else {
             const options = addressKeys[device][text];
-
             if (typeof options == "object") {
                 const index = data;
 

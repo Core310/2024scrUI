@@ -78,15 +78,18 @@ class BroadcastNode(Node):
         self.limiter = Limiter()
         self.limiter.setLimit(Topics.MOTOR_INPUT.value, 2)
         self.limiter.setLimit(Topics.MOTOR_FEEDBACK.value, 5)
-        self.limiter.setLimit(Topics.MOTOR_CONTROLLER_DEBUG.value, 1)
-        self.limiter.setLimit(Topics.IMU_DATA.value, 1)
-        self.limiter.setLimit(Topics.GPS_FEEDBACK.value, 3)
+        self.limiter.setLimit(Topics.MOTOR_CONTROLLER_DEBUG.value, 1)  # TODO WHAT WAS THIS
+
+        # IMU
+        self.limiter.setLimit(Topics.IMU.value, 1)
+        self.limiter.setLimit(Topics.GPS_FEEDBACK, 3)
         self.limiter.setLimit(Topics.POSITION.value, 3)
-        self.limiter.setLimit(Topics.CAMERA_COMPRESSED_LEFT.value, 0.5)
-        self.limiter.setLimit(Topics.CAMERA_COMPRESSED_RIGHT.value, 0.5)
-        self.limiter.setLimit(Topics.CFG_SPACE_RAW_IMAGE_LEFT_SMALL.value, 0.5)
-        self.limiter.setLimit(Topics.CFG_SPACE_RAW_IMAGE_RIGHT_SMALL.value, 0.5)
-        self.limiter.setLimit(Topics.CFG_SPACE_COMBINED_IMAGE.value, 0.5)
+        # Cameras
+        self.limiter.setLimit(Topics.RAW_LEFT.value, 0.5)
+        self.limiter.setLimit(Topics.RAW_RIGHT.value, 0.5)
+        self.limiter.setLimit(Topics.RAW_FRONT.value, 0.5)
+        self.limiter.setLimit(Topics.RAW_BACK.value, 0.5)
+        self.limiter.setLimit(Topics.COMBINED_IMAGE.value, 0.5)
 
         # Clients
         self.system_state_c = self.create_subscription(
@@ -95,29 +98,30 @@ class BroadcastNode(Node):
         self.system_state_c = self.create_client(
             SetSystemState, Topics.SYSTEM_STATE.value
         )
-        self.config_c = self.create_client(UpdateConfig, Topics.UPDATE_CONFIG_CLIENT.value)
-        self.get_presets_c = self.create_client(GetPresets, Topics.GET_PRESETS.value)
-        self.set_active_preset_c = self.create_client(
-            SetActivePreset, Topics.SET_ACTIVE_PRESET.value
-        )
-        self.save_active_preset_c = self.create_client(
-            SaveActivePreset, Topics.SAVE_ACTIVE_PRESET.value
-        )
-        self.delete_preset_c = self.create_client(DeletePreset, Topics.DELETE_PRESET.value)
+        self.config_c = self.create_client(UpdateConfig, Topics.CONFIGURATION.value)
+
+        # self.get_presets_c = self.create_client(GetPresets, Topics.GET_PRESETS.value)# TODO THESE Don't EXIST ANYMORE
+        # self.set_active_preset_c = self.create_client(
+        #    SetActivePreset, Topics.SET_ACTIVE_PRESET.value
+        # )
+        # self.save_active_preset_c = self.create_client(
+        #    SaveActivePreset, Topics.SAVE_ACTIVE_PRESET.value
+        # )
+        # self.delete_preset_c = self.create_client(DeletePreset, Topics.DELETE_PRESET.value)
 
         # Publishers
-        self.broadcast_p = self.create_publisher(Empty, Topics.BROADCAST.value, 20)
+        # self.broadcast_p = self.create_publisher(Empty, Topics.BROADCAST.value, 20)
 
         # Subscriptions
         self.device_state_s = self.create_subscription(
             DeviceState, Topics.DEVICE_STATE.value, self.deviceStateCallback, 20
         )
-        self.config_s = self.create_subscription(
-            ConfigUpdated,
-            Topics.CONFIG_UPDATED.value,
-            self.configurationInstructionCallback,
-            10,
-        )
+        # self.config_s = self.create_subscription(
+        #    ConfigUpdated,
+        #    Topics.CONFIG_UPDATED.value,
+        #    self.configurationInstructionCallback,
+        #    10,
+        # )
         self.position_s = self.create_subscription(
             Position, Topics.POSITION.value, self.positionCallback, 20
         )
@@ -128,8 +132,8 @@ class BroadcastNode(Node):
             MotorInput, Topics.MOTOR_INPUT.value, self.motorInputCallback, 20
         )
         self.motor_debug_s = self.create_subscription(
-            MotorControllerDebug,
-            Topics.MOTOR_CONTROLLER_DEBUG.value,
+            MotorControllerDebug,  # tood what was this before?
+            Topics.MOTOR_CONTROLLER_DEBUG.value,  #
             self.motorControllerDebugCallback,
             20,
         )
@@ -142,39 +146,39 @@ class BroadcastNode(Node):
         self.camera_left_s = self.create_subscription(
             CompressedImage,
             Topics.CAMERA_LEFT.value,
-            self.cameraCallbackLeft,
+            self.feelers,
             self.qos_profile,
         )
         self.camera_right_s = self.create_subscription(
             CompressedImage,
             Topics.CAMERA_RIGHT.value,
-            self.cameraCallbackRight,
+            self.combined,
             self.qos_profile,
         )
-        self.filtered_left_s = self.create_subscription(
+        self.camera_front_s = self.create_subscription(
             CompressedImage,
-            Topics.CFG_SPACE_RAW_IMAGE_LEFT_SMALL.value,
-            self.filteredCallbackLeftSmall,
+            Topics.RAW_FRONT.value,
+            self.camera_front_s,
             self.qos_profile,
         )
-        self.filtered_right_s = self.create_subscription(
+        self.camera_back_s = self.create_subscription(
             CompressedImage,
-            Topics.CFG_SPACE_RAW_IMAGE_RIGHT_SMALL.value,
-            self.filteredCallbackRightSmall,
+            Topics.RAW_BACK.value,
+            self.camera_back_s,
             self.qos_profile,
         )
         self.combined_s = self.create_subscription(
             CompressedImage,
-            Topics.CFG_SPACE_COMBINED_IMAGE.value,
-            self.filteredCallbackCombined,
+            Topics.COMBINED_IMAGE.value,
+            self.combined_s,
             self.qos_profile,
         )
-        self.inflated_s = self.create_subscription(
+        """self.inflated_s = self.create_subscription(
             CompressedImage,
             Topics.INFLATED_DEBUG.value,
             self.inflated_callback,
             self.qos_profile,
-        )
+        )"""
 
         self.loop_thread = threading.Thread(target=self.loopthread)
         self.loop_thread.start()
@@ -373,57 +377,57 @@ class BroadcastNode(Node):
         del self.send_map[unique_id]
 
     def systemStateCallback(self, msg: SystemState):
-        self.push("/scr/state/system", msg)
+        self.push(Topics.SystemState, msg)
 
     def deviceStateCallback(self, msg: DeviceState):
-        self.push("/scr/state/device", msg)
+        self.push(DeviceState, msg)
 
-    def configurationInstructionCallback(self, msg: ConfigUpdated):
-        self.push("/scr/configuration", msg)
+    #    def configurationInstructionCallback(self, msg: ConfigUpdated):
+    #        self.push("/scr/configuration", msg)
 
     def positionCallback(self, msg: Position):
-        self.push("/autonav/position", msg)
+        self.push(Topics.POSITION, msg)
 
     def motorInputCallback(self, msg: MotorInput):
-        self.push("/autonav/MotorInput", msg)
+        self.push(Topics.MOTOR_INPUT, msg)
 
     def motorFeedbackCallback(self, msg: MotorFeedback):
-        self.push("/autonav/MotorFeedback", msg)
+        self.push(Topics.MOTOR_FEEDBACK, msg)
 
     def imuDataCallback(self, msg: IMUData):
-        self.push("/autonav/imu", msg)
+        self.push(Topics.IMU, msg)
 
     def gpsFeedbackCallback(self, msg: GPSFeedback):
-        self.push("/autonav/gps", msg)
+        self.push(Topics.AUTONAV_GPS, msg)
 
     def motorControllerDebugCallback(self, msg: MotorControllerDebug):
-        self.push("/autonav/MotorControllerDebug", msg)
+        self.push(Topics.MOTOR_CONTROLLER_DEBUG, msg)
 
-    def cameraCallbackLeft(self, msg: CompressedImage):
-        self.push_image("/autonav/camera/compressed/left", msg)
+    # Cameras
+    # We have a total of 4 cameras: front,back,left,right, z
+    def feelers(self, msg: CompressedImage):
+        self.push_image(Topics.FEELERS, msg)
 
-    def cameraCallbackRight(self, msg: CompressedImage):
-        self.push_image("/autonav/camera/compressed/right", msg)
+    def combined(self, msg: CompressedImage):
+        self.push_image(Topics.COMBINED_IMAGE, msg)
 
-    def filteredCallbackLeft(self, msg: CompressedImage):
-        self.push_image("/autonav/cfg_space/raw/image/left", msg)
+    def raw_left(self, msg: CompressedImage):
+        self.push_image(Topics.RAW_LEFT, msg)
 
-    def filteredCallbackRight(self, msg: CompressedImage):
-        self.push_image("/autonav/cfg_space/raw/image/right", msg)
+    def raw_right(self, msg: CompressedImage):
+        self.push_image(Topics.RAW_RIGHT, msg)
 
-    def filteredCallbackLeftSmall(self, msg: CompressedImage):
-        self.push_image("/autonav/cfg_space/raw/image/left_small", msg)
+    def front(self, msg: CompressedImage):
+        self.push_image(Topics.RAW_FRONT, msg)
 
-    def filteredCallbackRightSmall(self, msg: CompressedImage):
-        self.push_image("/autonav/cfg_space/raw/image/right_small", msg)
+    def back(self, msg: CompressedImage):
+        self.push_image(Topics.RAW_BACK, msg)
 
-    def filteredCallbackCombined(self, msg: CompressedImage):
-        self.push_image("/autonav/cfg_space/combined/image", msg)
+    #    def filteredCallbackCombined(self, msg: CompressedImage):
+    #        self.push_image("/autonav/cfg_space/combined/image", msg)
 
-    # Both unused //FEATURE 21/11/2024 //DELETEME
-
-    def inflated_callback(self, msg: CompressedImage):
-        self.push_image("/autonav/cfg_space/raw/debug", msg)
+    #    def inflated_callback(self, msg: CompressedImage):
+    #       self.push_image("/autonav/cfg_space/raw/debug", msg)
 
     def pathingDebugCallback(self,
                              msg: PathingDebug):  # //feature 21/11/2024 Unused? Can reImplement pathing stuff again?
