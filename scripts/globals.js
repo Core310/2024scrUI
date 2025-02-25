@@ -257,18 +257,34 @@ const conbusDevices = {
     }
 };
 
-const TOPIC_SYSTEM_STATE = "/scr/state/system";
-const TOPIC_DEVICE_STATE = "/scr/state/device";
-const TOPIC_CONFIGURATION = "/scr/configuration";
-const TOPIC_LOGGING = "/scr/logging";
+
+// Topic Listeneres
+const TOPIC_SYSTEM_STATE = "autonav/shared/system";
+const TOPIC_DEVICE_STATE = "autonav/shared/device";
+
+// IMU Data
+const TOPIC_IMU = "/autonav/imu";
 const TOPIC_AUTONAV_GPS = "/autonav/gps";
-const TOPIC_MOTOR_FEEDBACK = "/autonav/MotorFeedback";
 const TOPIC_MOTOR_INPUT = "/autonav/MotorInput";
 const TOPIC_POSITION = "/autonav/position";
-const TOPIC_CAMERA_COMPRESSED_LEFT = "/autonav/camera/compressed/left";
-const TOPIC_CAMERA_COMPRESSED_RIGHT = "/autonav/camera/compressed/right";
-const TOPIC_CFG_SPACE_RAW_IMAGE_LEFT = "/autonav/cfg_space/raw/image/left_small";
-const TOPIC_CFG_SPACE_RAW_IMAGE_RIGHT = "/autonav/cfg_space/raw/image/right_small";
-const TOPIC_CFG_SPACE_COMBINED_IMAGE = "/autonav/cfg_space/combined/image";
-const TOPIC_IMU = "/autonav/imu";
+
+const TOPIC_MOTOR_FEEDBACK = "/autonav/MotorFeedback";
+const TOPIC_NUCStatistics = '/autonav/statistic';
+const TOPIC_ULTRASONICS = '/autonav/ultrasonics';
 const TOPIC_CONBUS = "/autonav/conbus";
+const TOPIC_SAFETY_LIGHTS = '/autonav/safety_lights';
+const TOPIC_PERFORMANCE = 'autonav/performance';
+
+// Raw camera
+const TOPIC_RAW_LEFT = 'autonav/camera/left';// TODO NEW NODES, IMPLEMENT
+const TOPIC_RAW_RIGHT = 'autonav/camera/right';// TODO NEW NODES, IMPLEMENT
+const TOPIC_RAW_FRONT = 'autonav/camera/front';// TODO NEW NODES, IMPLEMENT
+const TOPIC_RAW_BACK = 'autonav/camera/back';// TODO NEW NODES, IMPLEMENT
+
+//Other Camera Nodes
+const TOPIC_COMBINED_IMAGE = '/autonav/vision/combined/filtered'
+const TOPIC_FEELERS = '/autonav/feelers/debug';// todo does this transmit an image? (assuming it does for now
+
+// Others
+const TOPIC_CONFIGURATION = "/scr/configuration";// TODO IS THIS STILL A TOPIC?
+const TOPIC_PLAYBACK = "autonav/autonav_playback"; //TODO feed in new data and test if  this actually gets data in

@@ -1,27 +1,36 @@
 from enum import Enum
 
-
 class Topics(Enum):
-    CAMERA_COMPRESSED_LEFT = "/autonav/camera/compressed/left"
-    CAMERA_COMPRESSED_RIGHT = "/autonav/camera/compressed/right"
-    CFG_SPACE_RAW_IMAGE_LEFT_SMALL = "/autonav/cfg_space/raw/image/left_small"
-    CFG_SPACE_RAW_IMAGE_RIGHT_SMALL = "/autonav/cfg_space/raw/image/right_small"
-    CFG_SPACE_COMBINED_IMAGE = "/autonav/cfg_space/combined/image"
-    SYSTEM_STATE = "/scr/system_state"
-    UPDATE_CONFIG_CLIENT = "/scr/update_config_client"
-    GET_PRESETS = "/scr/get_presets"
-    SET_ACTIVE_PRESET = "/scr/set_active_preset"
-    SAVE_ACTIVE_PRESET = "/scr/save_active_preset"
-    DELETE_PRESET = "/scr/delete_preset"
-    BROADCAST = "/scr/state/broadcast"
-    DEVICE_STATE = "/scr/device_state"
-    CONFIG_UPDATED = "/scr/config_updated"
-    POSITION = "/autonav/position"
-    MOTOR_FEEDBACK = "/autonav/MotorFeedback"
+    # Topic Lis
+    # teneres
+    SYSTEM_STATE = "autonav/shared/system"
+    DEVICE_STATE = "autonav/shared/device"
+
+    # IMU Data
+    IMU = "/autonav/imu"
+    AUTONAV_GPS = "/autonav/gps"
     MOTOR_INPUT = "/autonav/MotorInput"
-    MOTOR_CONTROLLER_DEBUG = "/autonav/MotorControllerDebug"
-    GPS_FEEDBACK = "/autonav/gps"
-    IMU_DATA = "/autonav/imu"
-    CAMERA_LEFT = "/autonav/camera/compressed/left/cutout"
-    CAMERA_RIGHT = "/autonav/camera/compressed/right/cutout"
-    INFLATED_DEBUG = "/autonav/cfg_space/raw/debug"
+    POSITION = "/autonav/position"
+
+    MOTOR_FEEDBACK = "/autonav/MotorFeedback"
+    NUC_STATISTICS = "/autonav/statistic"
+    ULTRASONICS = "/autonav/ultrasonics"
+    CONBUS = "/autonav/conbus"
+    SAFETY_LIGHTS = "/autonav/safety_lights"
+    PERFORMANCE = "autonav/performance"
+
+    # Raw camera
+    RAW_LEFT = "autonav/camera/left"
+    RAW_RIGHT = "autonav/camera/right"
+    RAW_FRONT = "autonav/camera/front"
+    RAW_BACK = "autonav/camera/back"
+
+    # Other Camera Nodes
+    COMBINED_IMAGE = "/autonav/vision/combined/filtered"
+    FEELERS = "/autonav/feelers/debug"  # todo does this transmit an image? (assuming it does for now
+
+    # Others
+    CONFIGURATION = "/scr/configuration"  # TODO IS THIS STILL A TOPIC?
+    PLAYBACK = "autonav/autonav_playback"  # TODO feed in new data and test if this actually gets data in
+
+    MOTOR_CONTROLLER_DEBUG = ""  # TOD???
