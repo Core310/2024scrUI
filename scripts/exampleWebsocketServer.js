@@ -30,6 +30,13 @@ server.on('connection', (ws) => {
             data: imgData
         });
 
+        let feelers = JSON.stringify({
+            op: 'data',
+            topic: TOPIC_FEELERS, // Replaced with constant
+            timestamp: new Date().toISOString(),
+            data: imgData
+        });
+
         let combined = JSON.stringify({
             op: 'data',
             topic: TOPIC_COMBINED_IMAGE, // Replaced with constant
@@ -140,6 +147,7 @@ server.on('connection', (ws) => {
             forward_velocity: Math.random() * 10,
             angular_velocity: Math.random() * 10
         });
+
         ws.send(deviceState);
         ws.send(logging);
         ws.send(conbus);
@@ -147,6 +155,7 @@ server.on('connection', (ws) => {
             ws.send(combined);
             ws.send(leftSmall);
             ws.send(rightSmall);
+            ws.send(feelers);
             /* deprecated
                         ws.send(compressedRight);
                         ws.send(compressedLeft);
